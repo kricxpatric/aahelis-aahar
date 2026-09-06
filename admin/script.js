@@ -1156,3 +1156,171 @@ function escapeHTML(value) {
 if (document.getElementById("ordersList")) {
     loadOrders();
 }
+
+// ========================================
+// DASHBOARD MANAGEMENT
+// ========================================
+
+const DASHBOARD_API_URL =
+    `http://${window.location.hostname}:5000/api/dashboard`;
+
+
+// ========================================
+// LOAD DASHBOARD
+// ========================================
+
+async function loadDashboard() {
+
+    const totalOrders = document.getElementById("totalOrders");
+
+    // Only run on dashboard.html
+    if (!totalOrders) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(DASHBOARD_API_URL);
+
+        if (!response.ok) {
+            throw new Error("Could not load dashboard.");
+        }
+
+        const data = await response.json();
+
+        console.log("DASHBOARD DATA:", data);
+
+
+        // Statistics
+
+        document.getElementById("totalOrders").textContent =
+            data.total_orders;
+
+        document.getElementById("todaySales").textContent =
+            `₹${Number(data.today_sales).toFixed(0)}`;
+
+        document.getElementById("pendingOrders").textContent =
+            data.pending_orders;
+
+        document.getElementById("completedOrders").textContent =
+            data.completed_orders;
+
+
+        // Recent Orders
+
+        renderRecentOrders(data.recent_orders);
+
+
+    } catch (error) {
+
+        console.error("DASHBOARD ERROR:", error);
+
+        const recentOrders =
+            document.getElementById("recentOrdersList");
+
+        if (recentOrders) {
+
+            recentOrders.innerHTML = `
+                <div class="orders-empty">
+                    <div class="empty-icon">⚠️</div>
+                    <h3>Unable to load dashboard</h3>
+                    <p>Make sure the Flask backend is running.</p>
+                </div>
+            `;
+
+        }
+
+    }
+
+}
+
+
+// ========================================
+// RENDER RECENT ORDERS
+// ========================================
+
+function renderRecentOrders(orders) {
+
+    const container =
+        document.getElementById("recentOrdersList");
+
+    if (!container) {
+        return;
+    }
+
+
+    if (!orders || orders.length === 0) {
+
+        container.innerHTML = `
+            <div class="orders-empty">
+                <div class="empty-icon">📦</div>
+                <h3>No orders yet</h3>
+                <p>Customer orders will appear here.</p>
+            </div>
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML = "";
+
+
+    orders.forEach(function (order) {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "recent-order-item";
+
+
+        card.innerHTML = `
+
+            <div class="recent-order-info">
+
+                <strong>
+                    Order #${order.id}
+                </strong>
+
+                <span>
+                    ${escapeHTML(order.customer_name)}
+                </span>
+
+                <small>
+                    ${formatOrderDate(order.created_at)}
+                </small>
+
+            </div>
+
+
+            <div class="recent-order-right">
+
+                <strong class="recent-order-total">
+                    ₹${Number(order.total).toFixed(0)}
+                </strong>
+
+                <span class="order-status ${getStatusClass(order.status)}">
+                    ${escapeHTML(order.status)}
+                </span>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+// ========================================
+// INITIAL DASHBOARD LOAD
+// ========================================
+
+if (document.getElementById("totalOrders")) {
+
+    loadDashboard();
+
+}

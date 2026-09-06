@@ -441,6 +441,63 @@ def delete_order(order_id):
         "message": "Order deleted"
     })
 
+# ========================================
+# DASHBOARD STATISTICS
+# ========================================
+
+@app.route("/api/dashboard", methods=["GET"])
+def dashboard_stats():
+
+    connection = get_db()
+
+    total_orders = connection.execute("""
+        SELECT COUNT(*) AS count
+        FROM orders
+    """).fetchone()["count"]
+
+    pending_orders = connection.execute("""
+        SELECT COUNT(*) AS count
+        FROM orders
+        WHERE status = 'Pending'
+    """).fetchone()["count"]
+
+    completed_orders = connection.execute("""
+        SELECT COUNT(*) AS count
+        FROM orders
+        WHERE status = 'Completed'
+    """).fetchone()["count"]
+
+    today_orders = connection.execute("""
+        SELECT COUNT(*) AS count
+        FROM orders
+        WHERE date(created_at) = date('now', 'localtime')
+    """).fetchone()["count"]
+
+    today_sales = connection.execute("""
+        SELECT COALESCE(SUM(total), 0) AS total
+        FROM orders
+        WHERE date(created_at) = date('now', 'localtime')
+        AND status != 'Cancelled'
+    """).fetchone()["total"]
+
+    recent_orders = connection.execute("""
+        SELECT *
+        FROM orders
+        ORDER BY datetime(created_at) DESC
+        LIMIT 5
+    """).fetchall()
+
+    connection.close()
+
+    return jsonify({
+        "total_orders": total_orders,
+        "pending_orders": pending_orders,
+        "completed_orders": completed_orders,
+        "today_orders": today_orders,
+        "today_sales": today_sales,
+        "recent_orders": [dict(order) for order in recent_orders]
+    })
+
 # ================================
 # START SERVER
 # ================================

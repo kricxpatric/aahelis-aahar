@@ -100,7 +100,7 @@
 
                     <div>
                         <span>Total Orders</span>
-                        <strong>0</strong>
+                        <strong id="totalOrders">0</strong>
                     </div>
 
                 </div>
@@ -112,7 +112,7 @@
 
                     <div>
                         <span>Today's Sales</span>
-                        <strong>₹0</strong>
+                        <strong id="todaySales">₹0</strong>
                     </div>
 
                 </div>
@@ -124,7 +124,7 @@
 
                     <div>
                         <span>Pending Orders</span>
-                        <strong>0</strong>
+                        <strong id="pendingOrders">0</strong>
                     </div>
 
                 </div>
@@ -136,7 +136,7 @@
 
                     <div>
                         <span>Completed Orders</span>
-                        <strong>0</strong>
+                        <strong id="completedOrders">0</strong>
                     </div>
 
                 </div>
@@ -158,25 +158,19 @@
                             <p>Latest customer orders</p>
                         </div>
 
-                        <button class="view-btn">
+                        <button class="view-btn" onclick="window.location.href='orders.html'">
                             View All
                         </button>
 
                     </div>
 
 
-                    <div class="empty-state">
-
-                        <div class="empty-icon">📦</div>
-
-                        <h3>No orders yet</h3>
-
-                        <p>
-                            Customer orders will appear here
-                            once online ordering is connected.
-                        </p>
-
+                    <div id="recentOrdersList" class="recent-orders-list">
+                        <div class="orders-loading">
+                            Loading recent orders...
+                        </div>
                     </div>
+                </div>
 
                 </div>
 
