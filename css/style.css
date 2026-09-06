@@ -1,0 +1,1775 @@
+/* =========================================
+   A A H E L I ' S   A A H A R
+   Main Stylesheet
+========================================= */
+
+
+/* ---------- ROOT ---------- */
+
+:root {
+
+    --cream: #f8f3e9;
+    --cream-dark: #eee5d4;
+
+    --green: #34452a;
+    --green-light: #596b45;
+
+    --brown: #51351f;
+    --terracotta: #b85f32;
+
+    --text: #292820;
+    --muted: #716f64;
+
+    --white: #fffdf8;
+
+    --border: rgba(52, 69, 42, 0.18);
+
+    --shadow: 0 15px 40px rgba(54, 43, 28, 0.10);
+
+    --radius: 18px;
+
+}
+
+
+/* ---------- RESET ---------- */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+
+    background: var(--cream);
+
+    color: var(--text);
+
+    font-family: "DM Sans", sans-serif;
+
+    line-height: 1.6;
+
+}
+
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+button {
+    font: inherit;
+}
+
+
+/* ---------- CONTAINER ---------- */
+
+.section {
+
+    width: min(1100px, 90%);
+
+    margin: auto;
+
+    padding: 110px 0;
+
+}
+
+
+/* =========================================
+   NAVBAR
+========================================= */
+
+.navbar {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+
+    background: rgba(248, 243, 233, 0.94);
+
+    backdrop-filter: blur(14px);
+
+    border-bottom: 1px solid var(--border);
+
+}
+
+
+.nav-container {
+
+    width: min(1180px, 92%);
+
+    margin: auto;
+
+    min-height: 76px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+}
+
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+}
+
+
+.brand img {
+
+    width: 46px;
+
+    height: 46px;
+
+    object-fit: contain;
+
+}
+
+
+.brand span {
+
+    font-family: "Playfair Display", serif;
+
+    font-weight: 700;
+
+    color: var(--green);
+
+    font-size: 20px;
+
+}
+
+
+.nav-links {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 30px;
+
+}
+
+
+.nav-links a {
+
+    color: var(--green);
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    position: relative;
+
+    padding: 28px 0;
+
+}
+
+
+.nav-links a:not(.disabled-link)::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    bottom: 20px;
+
+    width: 0;
+
+    height: 2px;
+
+    background: var(--terracotta);
+
+    transition: 0.3s;
+
+}
+
+
+.nav-links a:not(.disabled-link):hover::after {
+
+    width: 100%;
+
+}
+
+
+.disabled-link {
+
+    opacity: 0.45;
+
+    cursor: not-allowed;
+
+}
+
+
+.disabled-link span {
+
+    position: absolute;
+
+    font-size: 8px;
+
+    background: var(--terracotta);
+
+    color: white;
+
+    padding: 2px 5px;
+
+    border-radius: 5px;
+
+    top: 8px;
+
+    right: -12px;
+
+}
+
+
+.menu-toggle {
+
+    display: none;
+
+    border: none;
+
+    background: none;
+
+    color: var(--green);
+
+    font-size: 27px;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================================
+   HERO
+========================================= */
+
+.hero {
+
+    min-height: calc(100vh - 76px);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 80px 20px;
+
+}
+
+
+.hero::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 600px;
+
+    height: 600px;
+
+    border: 1px solid rgba(52, 69, 42, 0.12);
+
+    border-radius: 50%;
+
+    top: -280px;
+
+    left: -220px;
+
+}
+
+
+.hero::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 500px;
+
+    height: 500px;
+
+    border: 1px solid rgba(184, 95, 50, 0.12);
+
+    border-radius: 50%;
+
+    bottom: -250px;
+
+    right: -200px;
+
+}
+
+
+.hero-content {
+
+    max-width: 800px;
+
+    position: relative;
+
+    z-index: 2;
+
+}
+
+
+.hero-logo {
+
+    width: 155px;
+
+    height: 155px;
+
+    margin: 0 auto 25px;
+
+}
+
+
+.hero-logo img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: contain;
+
+}
+
+
+.bengali-title,
+.bengali-heading {
+
+    font-family: "Noto Serif Bengali", serif;
+
+}
+
+
+.bengali-title {
+
+    color: var(--terracotta);
+
+    font-size: 18px;
+
+    margin-bottom: 18px;
+
+}
+
+
+.hero h1 {
+
+    font-family: "Playfair Display", serif;
+
+    color: var(--green);
+
+    font-size: clamp(42px, 6vw, 72px);
+
+    line-height: 1.1;
+
+    margin-bottom: 25px;
+
+}
+
+
+.hero h1 span {
+
+    color: var(--terracotta);
+
+}
+
+
+.hero-description {
+
+    max-width: 580px;
+
+    margin: auto;
+
+    color: var(--muted);
+
+    font-size: 17px;
+
+}
+
+
+.hero-buttons {
+
+    margin-top: 35px;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 14px;
+
+    flex-wrap: wrap;
+
+}
+
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+.btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 13px 24px;
+
+    border-radius: 100px;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    transition: 0.3s;
+
+}
+
+
+.btn-primary {
+
+    background: var(--green);
+
+    color: white;
+
+}
+
+
+.btn-primary:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 20px rgba(52, 69, 42, 0.2);
+
+}
+
+
+.btn-outline {
+
+    border: 1px solid var(--green);
+
+    color: var(--green);
+
+}
+
+
+.btn-outline:hover {
+
+    background: var(--green);
+
+    color: white;
+
+}
+
+
+.btn-whatsapp {
+
+    background: #61734e;
+
+    color: white;
+
+}
+
+
+/* =========================================
+   SECTION HEADINGS
+========================================= */
+
+.section-heading {
+
+    text-align: center;
+
+    margin-bottom: 55px;
+
+}
+
+
+.section-label {
+
+    color: var(--terracotta);
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    font-weight: 700;
+
+}
+
+
+.section-heading h2 {
+
+    font-family: "Playfair Display", serif;
+
+    color: var(--green);
+
+    font-size: clamp(35px, 5vw, 50px);
+
+    margin: 8px 0 10px;
+
+}
+
+
+.section-heading p {
+
+    color: var(--muted);
+
+}
+
+
+.heading-line {
+
+    width: 70px;
+
+    height: 2px;
+
+    background: var(--terracotta);
+
+    margin: 20px auto 0;
+
+}
+
+
+/* =========================================
+   ABOUT
+========================================= */
+
+.about-section {
+
+    border-top: 1px solid var(--border);
+
+}
+
+
+.about-grid {
+
+    display: grid;
+
+    grid-template-columns: 1.5fr 1fr;
+
+    gap: 70px;
+
+    align-items: center;
+
+}
+
+
+.about-text {
+
+    color: var(--muted);
+
+    font-size: 16px;
+
+}
+
+
+.about-text p {
+
+    margin-bottom: 20px;
+
+}
+
+
+.about-text strong {
+
+    color: var(--green);
+
+}
+
+
+.bengali-heading {
+
+    color: var(--terracotta);
+
+    font-size: 25px;
+
+    margin-bottom: 20px !important;
+
+}
+
+
+.about-card {
+
+    background: var(--green);
+
+    color: white;
+
+    padding: 38px;
+
+    border-radius: var(--radius);
+
+    box-shadow: var(--shadow);
+
+}
+
+
+.card-icon {
+
+    font-size: 35px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.about-card h3 {
+
+    font-family: "Playfair Display", serif;
+
+    font-size: 23px;
+
+    margin-bottom: 6px;
+
+}
+
+
+.about-card p {
+
+    color: #d9dfd1;
+
+}
+
+
+.about-card a {
+
+    display: block;
+
+    color: white;
+
+    margin-top: 6px;
+
+}
+
+
+.contact-divider {
+
+    height: 1px;
+
+    background: rgba(255,255,255,0.2);
+
+    margin: 25px 0;
+
+}
+
+
+/* =========================================
+   AAHAR
+========================================= */
+
+.aahar-section {
+
+    background: var(--white);
+
+    width: 100%;
+
+    max-width: none;
+
+    padding-left: max(5%, calc((100% - 1100px) / 2));
+
+    padding-right: max(5%, calc((100% - 1100px) / 2));
+
+}
+
+
+.menu-tabs {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-bottom: 40px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.menu-tab {
+
+    border: 1px solid var(--border);
+
+    background: transparent;
+
+    color: var(--green);
+
+    padding: 11px 22px;
+
+    border-radius: 100px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: 0.3s;
+
+}
+
+
+.menu-tab.active {
+
+    background: var(--green);
+
+    color: white;
+
+}
+
+
+.menu-content {
+
+    display: none;
+
+}
+
+
+.menu-content.active {
+
+    display: block;
+
+}
+
+
+.menu-intro {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    margin-bottom: 30px;
+
+}
+
+
+.menu-intro > span {
+
+    font-size: 38px;
+
+}
+
+
+.menu-intro h3 {
+
+    font-family: "Playfair Display", serif;
+
+    color: var(--green);
+
+    font-size: 30px;
+
+}
+
+
+.menu-intro p {
+
+    color: var(--muted);
+
+}
+
+
+/* =================================
+   OFFICE CANTEEN MENU
+================================= */
+
+.menu-section {
+    padding: 60px 5%;
+    max-width: 1000px;
+    margin: auto;
+}
+
+
+/* Heading */
+
+.menu-heading {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 35px;
+}
+
+.menu-icon {
+    font-size: 42px;
+}
+
+.eyebrow {
+    margin: 0 0 5px;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #68735a;
+    font-weight: 600;
+}
+
+.menu-heading h2 {
+    margin: 0;
+    font-family: Georgia, serif;
+    font-size: 48px;
+    color: #263d25;
+}
+
+.menu-subtitle {
+    margin: 8px 0 0;
+    color: #777;
+    font-size: 17px;
+}
+
+
+/* Price */
+
+.price-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 25px 30px;
+    margin-bottom: 30px;
+
+    background: #f5f1e6;
+    border: 1px solid #ddd6c7;
+    border-radius: 18px;
+}
+
+.price-card span {
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: #777;
+}
+
+.price-card strong {
+    font-size: 32px;
+    color: #b45c32;
+}
+
+
+/* Food list */
+
+.food-list {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Food card */
+
+.food-card {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+
+    padding: 22px 5px;
+
+    border-bottom: 1px solid #e4e0d7;
+}
+
+
+/* Food image */
+
+.food-card img {
+    width: 105px;
+    height: 105px;
+
+    object-fit: cover;
+
+    border-radius: 18px;
+
+    flex-shrink: 0;
+}
+
+
+/* Food information */
+
+.food-info h3 {
+    margin: 0 0 8px;
+
+    font-size: 23px;
+    font-weight: 600;
+
+    color: #292929;
+}
+
+.food-info h3 span {
+    font-size: 16px;
+    font-weight: 400;
+    color: #777;
+}
+
+.food-info p {
+    margin: 0;
+
+    font-size: 16px;
+    line-height: 1.6;
+
+    color: #777;
+}
+
+/* ---------- DINNER ---------- */
+
+.dinner-menu {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 35px;
+
+}
+
+
+.dinner-category {
+
+    background: var(--cream);
+
+    border: 1px solid var(--border);
+
+    padding: 30px;
+
+    border-radius: var(--radius);
+
+}
+
+
+.dinner-category h3 {
+
+    font-family: "Noto Serif Bengali", serif;
+
+    color: var(--green);
+
+    font-size: 26px;
+
+    margin-bottom: 8px;
+
+}
+
+
+.order-note {
+
+    color: var(--terracotta);
+
+    font-size: 13px;
+
+    margin-bottom: 20px;
+
+}
+
+
+.food-item {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 16px 0;
+
+    border-bottom: 1px solid var(--border);
+
+}
+
+
+.food-item:last-child {
+
+    border-bottom: none;
+
+}
+
+
+.food-item span {
+
+    color: var(--text);
+
+}
+
+
+.food-item strong {
+
+    color: var(--terracotta);
+
+    white-space: nowrap;
+
+    font-size: 14px;
+
+}
+
+
+.food-item small {
+
+    display: block;
+
+    color: var(--muted);
+
+    margin-top: 4px;
+
+}
+
+
+.extra-note {
+
+    margin-top: 20px;
+
+    padding: 15px;
+
+    border-left: 3px solid var(--terracotta);
+
+    color: var(--muted);
+
+    font-size: 14px;
+
+}
+
+
+/* ---------- PLACEHOLDER ---------- */
+
+.menu-placeholder {
+
+    border: 1px dashed var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 55px 20px;
+
+    text-align: center;
+
+    color: var(--muted);
+
+}
+
+
+.menu-placeholder p {
+
+    font-size: 18px;
+
+    color: var(--green);
+
+    margin-bottom: 5px;
+
+}
+
+
+/* ---------- ORDER ---------- */
+
+.order-box {
+
+    margin-top: 55px;
+
+    padding: 35px;
+
+    text-align: center;
+
+    background: var(--cream);
+
+    border-radius: var(--radius);
+
+    border: 1px solid var(--border);
+
+}
+
+
+.order-box h3 {
+
+    font-family: "Playfair Display", serif;
+
+    color: var(--green);
+
+    font-size: 28px;
+
+}
+
+
+.order-box p {
+
+    color: var(--muted);
+
+    margin: 5px 0 20px;
+
+}
+
+
+.order-buttons {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+
+}
+
+
+/* =========================================
+   OCCASIONS
+========================================= */
+
+.occasion-grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 20px;
+
+}
+
+
+.occasion-card {
+
+    padding: 32px;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    background: var(--white);
+
+    transition: 0.3s;
+
+}
+
+
+.occasion-card:hover {
+
+    transform: translateY(-5px);
+
+    box-shadow: var(--shadow);
+
+}
+
+
+.occasion-number {
+
+    color: var(--terracotta);
+
+    font-size: 12px;
+
+    letter-spacing: 2px;
+
+    margin-bottom: 25px;
+
+}
+
+
+.occasion-card h3 {
+
+    font-family: "Playfair Display", serif;
+
+    color: var(--green);
+
+    font-size: 24px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.occasion-card p {
+
+    color: var(--muted);
+
+    font-size: 14px;
+
+}
+
+
+.occasion-note {
+
+    margin: 45px auto;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 20px;
+
+    align-items: center;
+
+    color: var(--terracotta);
+
+}
+
+
+.contact-strip {
+
+    background: var(--green);
+
+    color: white;
+
+    border-radius: var(--radius);
+
+    padding: 25px 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.contact-strip span {
+
+    display: block;
+
+    color: #cdd4c5;
+
+    font-size: 12px;
+
+}
+
+
+.contact-strip strong {
+
+    display: block;
+
+    font-family: "Playfair Display", serif;
+
+    font-size: 20px;
+
+}
+
+
+.contact-strip a {
+
+    color: white;
+
+    font-weight: 600;
+
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer {
+
+    background: #273420;
+
+    color: white;
+
+    padding: 55px 5% 20px;
+
+}
+
+
+.footer-inner {
+
+    width: min(1100px, 100%);
+
+    margin: auto;
+
+    display: grid;
+
+    grid-template-columns: 1.5fr 1fr 1fr;
+
+    gap: 50px;
+
+    padding-bottom: 40px;
+
+}
+
+
+.footer-brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+}
+
+
+.footer-brand img {
+
+    width: 70px;
+
+    height: 70px;
+
+    object-fit: contain;
+
+}
+
+
+.footer h3 {
+
+    font-family: "Playfair Display", serif;
+
+    font-size: 23px;
+
+}
+
+
+.footer p {
+
+    color: #bdc6b7;
+
+    font-size: 14px;
+
+}
+
+
+.footer-contact strong,
+.footer-address strong {
+
+    display: block;
+
+    margin-bottom: 10px;
+
+}
+
+
+.footer-contact a {
+
+    display: block;
+
+    color: #d8dfd3;
+
+    margin-bottom: 5px;
+
+}
+
+
+.footer-bottom {
+
+    border-top: 1px solid rgba(255,255,255,0.12);
+
+    padding-top: 20px;
+
+    text-align: center;
+
+}
+
+
+.footer-bottom p {
+
+    font-size: 12px;
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 800px) {
+
+
+    .section {
+
+        padding: 75px 0;
+
+    }
+
+
+    /* NAV */
+
+    .menu-toggle {
+
+        display: block;
+
+    }
+
+
+    .nav-links {
+
+        position: absolute;
+
+        top: 76px;
+
+        left: 0;
+
+        width: 100%;
+
+        background: var(--cream);
+
+        border-bottom: 1px solid var(--border);
+
+        display: none;
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 0;
+
+        padding: 10px 5% 20px;
+
+    }
+
+
+    .nav-links.open {
+
+        display: flex;
+
+    }
+
+
+    .nav-links a {
+
+        padding: 14px 0;
+
+    }
+
+
+    .nav-links a:not(.disabled-link)::after {
+
+        display: none;
+
+    }
+
+
+    .disabled-link span {
+
+        position: static;
+
+        margin-left: 7px;
+
+    }
+
+
+    /* HERO */
+
+    .hero {
+
+        min-height: 85vh;
+
+    }
+
+
+    .hero-logo {
+
+        width: 125px;
+
+        height: 125px;
+
+    }
+
+
+    .hero-description {
+
+        font-size: 15px;
+
+    }
+
+
+    /* ABOUT */
+
+    .about-grid {
+
+        grid-template-columns: 1fr;
+
+        gap: 35px;
+
+    }
+
+
+    /* DINNER */
+
+    .dinner-menu {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    /* OCCASIONS */
+
+    .occasion-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    /* FOOTER */
+
+    .footer-inner {
+
+        grid-template-columns: 1fr;
+
+        gap: 30px;
+
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+
+    .brand span {
+
+        font-size: 17px;
+
+    }
+
+
+    .brand img {
+
+        width: 40px;
+
+        height: 40px;
+
+    }
+
+
+    .hero {
+
+        padding-top: 50px;
+
+    }
+
+
+    .hero h1 {
+
+        font-size: 40px;
+
+    }
+
+
+    .bengali-title {
+
+        font-size: 16px;
+
+    }
+
+
+    .menu-row {
+
+        grid-template-columns: 1fr;
+
+        gap: 7px;
+
+    }
+
+
+    .food-item {
+
+        align-items: flex-start;
+
+    }
+
+
+    .food-item strong {
+
+        font-size: 13px;
+
+    }
+
+
+    .contact-strip {
+
+        text-align: center;
+
+        justify-content: center;
+
+    }
+
+
+    .footer-brand {
+
+        align-items: flex-start;
+
+    }
+
+}
+
+/* =================================
+   MOBILE
+================================= */
+
+@media (max-width: 600px) {
+
+    .menu-section {
+        padding: 35px 18px;
+    }
+
+
+    .menu-heading {
+        gap: 12px;
+        margin-bottom: 25px;
+    }
+
+    .menu-icon {
+        font-size: 34px;
+    }
+
+    .eyebrow {
+        font-size: 9px;
+        letter-spacing: 2px;
+    }
+
+    .menu-heading h2 {
+        font-size: 34px;
+    }
+
+    .menu-subtitle {
+        font-size: 15px;
+        line-height: 1.5;
+    }
+
+
+    /* Price */
+
+    .price-card {
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+
+    .price-card span {
+        font-size: 11px;
+        letter-spacing: 2px;
+    }
+
+    .price-card strong {
+        font-size: 27px;
+    }
+
+
+    /* Food cards */
+
+    .food-card {
+        gap: 15px;
+        padding: 18px 0;
+    }
+
+
+    .food-card img {
+        width: 82px;
+        height: 82px;
+        border-radius: 14px;
+    }
+
+
+    .food-info {
+        min-width: 0;
+    }
+
+
+    .food-info h3 {
+        font-size: 18px;
+        line-height: 1.3;
+        margin-bottom: 5px;
+    }
+
+    .food-info h3 span {
+        font-size: 14px;
+    }
+
+    .food-info p {
+        font-size: 14px;
+        line-height: 1.45;
+    }
+
+}/* Mobile — same calm, compact feel as Office Canteen */
+@media (max-width: 600px) {
+    #lunch,
+    #dinner {
+        padding: 35px 18px;
+    }
+
+    #lunch .menu-intro,
+    #dinner .menu-intro {
+        gap: 12px;
+        margin-bottom: 25px;
+    }
+
+    #lunch .menu-intro > span,
+    #dinner .menu-intro > span {
+        font-size: 34px;
+    }
+
+    #lunch .menu-intro h3,
+    #dinner .menu-intro h3 {
+        font-size: 34px;
+    }
+
+    #lunch .menu-intro p,
+    #dinner .menu-intro p {
+        font-size: 15px;
+        line-height: 1.5;
+    }
+
+    #lunch .menu-placeholder,
+    #dinner .dinner-category {
+        padding: 20px;
+        border-radius: 18px;
+    }
+
+    #lunch .lunch-category h3,
+    #dinner .dinner-category h3 {
+        font-size: 23px;
+    }
+
+    #lunch .food-item,
+    #dinner .food-item {
+        gap: 12px;
+        padding: 16px 0;
+    }
+
+    #lunch .food-item strong,
+    #dinner .food-item strong {
+        font-size: 13px;
+    }
+
+    #lunch .food-item,
+    #dinner .food-item {
+        font-size: 14px;
+        line-height: 1.45;
+    }
+
+    #lunch .food-item small,
+    #dinner .food-item small {
+        font-size: 13px;
+    }
+
+    #lunch .extra-note {
+        font-size: 13px;
+        line-height: 1.5;
+        padding: 13px;
+    }
+}
+
+
+
+
+
