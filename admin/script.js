@@ -1,6 +1,15 @@
-// ================================
+// ========================================
+// AAHELI'S AAHAR - ADMIN SCRIPT
+// ========================================
+
+// Automatically use the laptop's IP address
+// when the website is opened through Live Server.
+const API_URL = `http://${window.location.hostname}:5000/api/menu`;
+
+
+// ========================================
 // ADMIN LOGIN
-// ================================
+// ========================================
 
 const loginForm = document.getElementById("loginForm");
 
@@ -12,104 +21,65 @@ if (loginForm) {
 
         event.preventDefault();
 
-        const username =
-            document.getElementById("username").value;
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
 
-        const password =
-            document.getElementById("password").value;
+        if (username === "admin" && password === "admin123") {
 
-        const correctUsername = "admin";
-        const correctPassword = "admin123";
-
-        if (
-            username === correctUsername &&
-            password === correctPassword
-        ) {
-
-            loginMessage.textContent =
-                "Login successful!";
-
+            loginMessage.textContent = "Login successful!";
             loginMessage.style.color = "green";
 
             setTimeout(function () {
-
-                window.location.href =
-                    "dashboard.html";
-
+                window.location.href = "dashboard.html";
             }, 500);
 
         } else {
 
-            loginMessage.textContent =
-                "Invalid username or password.";
-
-            loginMessage.style.color =
-                "#b45c32";
+            loginMessage.textContent = "Invalid username or password.";
+            loginMessage.style.color = "#b45c32";
 
         }
 
     });
-
 }
 
 
-// ================================
+// ========================================
 // LOGOUT
-// ================================
+// ========================================
 
 function logout() {
-
     window.location.href = "index.html";
-
 }
 
 
-// ================================
-// API
-// ================================
-
-const API_URL = "http://127.0.0.1:5000/api/menu";
-
-
-// ================================
+// ========================================
 // MENU TABS
-// ================================
+// ========================================
 
-const menuTabs =
-    document.querySelectorAll(".admin-menu-tab");
-
-const menuSections =
-    document.querySelectorAll(".admin-menu-section");
-
+const menuTabs = document.querySelectorAll(".admin-menu-tab");
+const menuSections = document.querySelectorAll(".admin-menu-section");
 
 menuTabs.forEach(function (tab) {
 
     tab.addEventListener("click", function () {
 
-        const target =
-            tab.dataset.menu;
+        const target = tab.dataset.menu;
 
         menuTabs.forEach(function (item) {
-
             item.classList.remove("active");
-
         });
 
         menuSections.forEach(function (section) {
-
             section.classList.remove("active");
-
         });
 
         tab.classList.add("active");
 
-        const targetSection =
-            document.getElementById(target);
+        const targetSection = document.getElementById(target);
 
         if (targetSection) {
-
             targetSection.classList.add("active");
-
         }
 
     });
@@ -117,95 +87,81 @@ menuTabs.forEach(function (tab) {
 });
 
 
-// ================================
+// ========================================
 // LOAD MENU
-// ================================
+// ========================================
 
 async function loadMenu() {
 
     try {
 
-        const response =
-            await fetch(API_URL);
+        const response = await fetch(API_URL);
 
-        const items =
-            await response.json();
+        if (!response.ok) {
+            throw new Error("Could not load menu.");
+        }
+
+        const items = await response.json();
 
         renderMenu(items);
 
     } catch (error) {
 
-        console.error(error);
+        console.error("LOAD MENU ERROR:", error);
 
-        document.querySelectorAll(".admin-food-list")
-            .forEach(function (list) {
-
-                list.innerHTML =
-                    "<p>Unable to connect to server.</p>";
-
-            });
+        document.querySelectorAll(".admin-food-list").forEach(function (list) {
+            list.innerHTML =
+                "<p class='empty-menu'>Unable to load menu.</p>";
+        });
 
     }
 
 }
 
 
-// ================================
+// ========================================
 // RENDER MENU
-// ================================
+// ========================================
 
 function renderMenu(items) {
 
     const lists = {
-
-        lunch:
-            document.getElementById("lunchList"),
-
-        canteen:
-            document.getElementById("canteenList"),
-
-        dinner:
-            document.getElementById("dinnerList")
-
+        lunch: document.getElementById("lunchList"),
+        canteen: document.getElementById("canteenList"),
+        dinner: document.getElementById("dinnerList")
     };
 
-
+    // Clear all lists
     Object.values(lists).forEach(function (list) {
 
         if (list) {
-
             list.innerHTML = "";
-
         }
 
     });
 
 
+    // Put each item in its category
     items.forEach(function (item) {
 
-        const list =
-            lists[item.category];
+        const list = lists[item.category];
 
-        if (!list) return;
+        if (!list) {
+            return;
+        }
 
+        const card = document.createElement("div");
 
-        const card =
-            document.createElement("div");
-
-        card.className =
-            "admin-food-card";
-
+        card.className = "admin-food-card";
 
         if (!item.available) {
-
-            card.classList.add("disabled");
-
+            card.classList.add("disabled-item");
         }
 
 
         card.innerHTML = `
 
-            <div class="food-info">
+            <div class="admin-food-info">
 
                 <small>${item.day}</small>
 
@@ -215,29 +171,31 @@ function renderMenu(items) {
 
                 <strong>₹${item.price}</strong>
 
+                ${
+                    item.available
+                    ? ""
+                    : "<span class='disabled-label'>Disabled</span>"
+                }
+
             </div>
 
             <div class="food-actions">
 
                 <button
-                    onclick="editItem(${item.id})"
-                >
+                    type="button"
+                    onclick="editItem(${item.id})">
                     Edit
                 </button>
 
                 <button
-                    onclick="toggleAvailability(
-                        ${item.id},
-                        ${item.available}
-                    )"
-                >
+                    type="button"
+                    onclick="toggleAvailability(${item.id}, ${item.available ? 1 : 0})">
                     ${item.available ? "Disable" : "Enable"}
                 </button>
 
                 <button
-                    onclick="deleteItem(${item.id})"
-                    class="delete-btn"
-                >
+                    type="button"
+                    onclick="deleteItem(${item.id})">
                     Delete
                 </button>
 
@@ -245,18 +203,15 @@ function renderMenu(items) {
 
         `;
 
-
         list.appendChild(card);
 
     });
 
 
+    // Empty category message
     Object.entries(lists).forEach(function ([category, list]) {
 
-        if (
-            list &&
-            list.children.length === 0
-        ) {
+        if (list && list.children.length === 0) {
 
             list.innerHTML =
                 "<p class='empty-menu'>No menu items yet.</p>";
@@ -268,177 +223,196 @@ function renderMenu(items) {
 }
 
 
-// ================================
+// ========================================
 // OPEN ADD FORM
-// ================================
+// ========================================
 
 function openAddForm(category) {
 
-    document.getElementById("menuForm").reset();
+    const modal = document.getElementById("menuModal");
+    const form = document.getElementById("menuForm");
+
+    form.reset();
 
     document.getElementById("itemId").value = "";
-
-    document.getElementById("itemCategory").value =
-        category;
 
     document.getElementById("formTitle").textContent =
         "Add Menu Item";
 
-    document.getElementById("menuModal")
-        .classList.add("active");
+    document.getElementById("itemCategory").value =
+        category;
+
+    modal.classList.add("active");
 
 }
 
 
-// ================================
+// ========================================
 // CLOSE FORM
-// ================================
+// ========================================
 
 function closeMenuForm() {
 
-    document.getElementById("menuModal")
-        .classList.remove("active");
+    const modal = document.getElementById("menuModal");
+
+    modal.classList.remove("active");
 
 }
 
 
-// ================================
-// ADD / EDIT ITEM
-// ================================
+// ========================================
+// SAVE MENU ITEM
+// ========================================
 
-const menuForm =
-    document.getElementById("menuForm");
-
+const menuForm = document.getElementById("menuForm");
 
 if (menuForm) {
 
-    menuForm.addEventListener(
-        "submit",
-        async function (event) {
+    menuForm.addEventListener("submit", async function (event) {
 
-            event.preventDefault();
+        event.preventDefault();
 
+        const itemId =
+            document.getElementById("itemId").value;
 
-            const itemId =
-                document.getElementById("itemId").value;
+        const data = {
 
+            day: document.getElementById("itemDay").value,
 
-            const item = {
+            name: document.getElementById("itemName").value.trim(),
 
-                day:
-                    document.getElementById("itemDay").value,
+            description:
+                document.getElementById("itemDescription").value.trim(),
 
-                name:
-                    document.getElementById("itemName").value,
+            price:
+                Number(document.getElementById("itemPrice").value),
 
-                description:
-                    document.getElementById("itemDescription").value,
+            category:
+                document.getElementById("itemCategory").value
 
-                price:
-                    Number(
-                        document.getElementById("itemPrice").value
-                    ),
-
-                category:
-                    document.getElementById("itemCategory").value
-
-            };
+        };
 
 
-            try {
-
-                let response;
+        console.log("SAVING:", data);
 
 
-                if (itemId) {
+        try {
 
-                    response = await fetch(
-                        `${API_URL}/${itemId}`,
-                        {
-                            method: "PUT",
+            let response;
 
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
+            // ====================================
+            // EDIT
+            // ====================================
 
-                            body:
-                                JSON.stringify(item)
-                        }
-                    );
+            if (itemId) {
 
-                } else {
+                response = await fetch(
+                    `${API_URL}/${itemId}`,
+                    {
+                        method: "PUT",
 
-                    response = await fetch(
-                        API_URL,
-                        {
-                            method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
 
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body:
-                                JSON.stringify(item)
-                        }
-                    );
-
-                }
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "Failed to save item"
-                    );
-
-                }
-
-
-                closeMenuForm();
-
-                loadMenu();
-
-            } catch (error) {
-
-                console.error(error);
-
-                alert(
-                    "Could not save menu item."
+                        body: JSON.stringify(data)
+                    }
                 );
 
             }
 
+            // ====================================
+            // ADD
+            // ====================================
+
+            else {
+
+                response = await fetch(
+                    API_URL,
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify(data)
+                    }
+                );
+
+            }
+
+
+            const result = await response.json();
+
+            console.log("SERVER RESPONSE:", result);
+
+
+            if (!response.ok) {
+
+                alert(
+                    result.error ||
+                    "Something went wrong."
+                );
+
+                return;
+
+            }
+
+
+            closeMenuForm();
+
+            await loadMenu();
+
+            alert(
+                itemId
+                ? "Menu item updated successfully!"
+                : "Menu item added successfully!"
+            );
+
+
+        } catch (error) {
+
+            console.error("SAVE ERROR:", error);
+
+            alert(
+                "Could not connect to the backend.\n\n" +
+                "Make sure Flask is running."
+            );
+
         }
-    );
+
+    });
 
 }
 
 
-// ================================
+// ========================================
 // EDIT ITEM
-// ================================
+// ========================================
 
 async function editItem(id) {
 
     try {
 
-        const response =
-            await fetch(API_URL);
+        const response = await fetch(API_URL);
 
-        const items =
-            await response.json();
+        const items = await response.json();
 
-        const item =
-            items.find(function (item) {
+        const item = items.find(function (menuItem) {
 
-                return item.id === id;
+            return Number(menuItem.id) === Number(id);
 
-            });
+        });
 
 
-        if (!item) return;
+        if (!item) {
+
+            alert("Menu item not found.");
+
+            return;
+
+        }
 
 
         document.getElementById("itemId").value =
@@ -459,6 +433,7 @@ async function editItem(id) {
         document.getElementById("itemCategory").value =
             item.category;
 
+
         document.getElementById("formTitle").textContent =
             "Edit Menu Item";
 
@@ -466,68 +441,73 @@ async function editItem(id) {
         document.getElementById("menuModal")
             .classList.add("active");
 
+
     } catch (error) {
 
-        console.error(error);
+        console.error("EDIT ERROR:", error);
 
-        alert(
-            "Could not load menu item."
-        );
+        alert("Could not load this menu item.");
 
     }
 
 }
 
 
-// ================================
+// ========================================
 // ENABLE / DISABLE
-// ================================
+// ========================================
 
-async function toggleAvailability(
-    id,
-    currentStatus
-) {
+async function toggleAvailability(id, currentStatus) {
+
+    const newStatus = currentStatus ? 0 : 1;
 
     try {
 
-        const response =
-            await fetch(
-                `${API_URL}/${id}/availability`,
-                {
-                    method: "PATCH",
+        const response = await fetch(
+            `${API_URL}/${id}/availability`,
+            {
+                method: "PATCH",
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-                    body: JSON.stringify({
+                body: JSON.stringify({
+                    available: newStatus
+                })
+            }
+        );
 
-                        available:
-                            currentStatus ? 0 : 1
 
-                    })
-                }
-            );
+        const result = await response.json();
+
+        console.log("AVAILABILITY RESPONSE:", result);
 
 
         if (!response.ok) {
 
-            throw new Error(
-                "Failed to change availability"
+            alert(
+                result.error ||
+                "Could not change availability."
             );
+
+            return;
 
         }
 
 
-        loadMenu();
+        await loadMenu();
+
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "AVAILABILITY ERROR:",
+            error
+        );
 
         alert(
-            "Could not change availability."
+            "Could not connect to the backend."
         );
 
     }
@@ -535,49 +515,62 @@ async function toggleAvailability(
 }
 
 
-// ================================
+// ========================================
 // DELETE ITEM
-// ================================
+// ========================================
 
 async function deleteItem(id) {
 
-    const confirmed =
-        confirm(
-            "Are you sure you want to delete this menu item?"
-        );
+    const confirmed = confirm(
+        "Are you sure you want to delete this menu item?"
+    );
 
-
-    if (!confirmed) return;
+    if (!confirmed) {
+        return;
+    }
 
 
     try {
 
-        const response =
-            await fetch(
-                `${API_URL}/${id}`,
-                {
-                    method: "DELETE"
-                }
-            );
+        const response = await fetch(
+            `${API_URL}/${id}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+
+        const result = await response.json();
+
+        console.log("DELETE RESPONSE:", result);
 
 
         if (!response.ok) {
 
-            throw new Error(
-                "Failed to delete item"
+            alert(
+                result.error ||
+                "Could not delete item."
             );
+
+            return;
 
         }
 
 
-        loadMenu();
+        await loadMenu();
+
+        alert("Menu item deleted successfully!");
+
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "DELETE ERROR:",
+            error
+        );
 
         alert(
-            "Could not delete menu item."
+            "Could not connect to the backend."
         );
 
     }
@@ -585,14 +578,10 @@ async function deleteItem(id) {
 }
 
 
-// ================================
-// LOAD MENU ON PAGE OPEN
-// ================================
+// ========================================
+// INITIAL LOAD
+// ========================================
 
-if (
-    document.getElementById("canteenList")
-) {
-
+if (document.querySelector(".admin-food-list")) {
     loadMenu();
-
 }

@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sqlite3
 import os
@@ -6,11 +6,12 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-DATABASE = os.path.join(os.path.dirname(__file__), "database.db")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE = os.path.join(BASE_DIR, "database.db")
 
 
 # ================================
-# DATABASE CONNECTION
+# DATABASE
 # ================================
 
 def get_db():
@@ -19,12 +20,7 @@ def get_db():
     return connection
 
 
-# ================================
-# CREATE DATABASE
-# ================================
-
 def create_database():
-
     connection = get_db()
 
     connection.execute("""
@@ -38,105 +34,21 @@ def create_database():
             available INTEGER DEFAULT 1
         )
     """)
+    connection.execute("""
+        CREATE TABLE IF NOT EXISTS orders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            customer_name TEXT NOT NULL,
+            phone TEXT NOT NULL,
+            address TEXT,
+            items TEXT NOT NULL,
+            total REAL NOT NULL,
+            status TEXT DEFAULT 'Pending',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
 
     connection.commit()
     connection.close()
-
-
-# ================================
-# ADD INITIAL MENU
-# ================================
-
-def add_initial_menu():
-
-    connection = get_db()
-
-    existing_items = connection.execute(
-        "SELECT COUNT(*) FROM menu_items"
-    ).fetchone()[0]
-
-    if existing_items == 0:
-
-        menu_items = [
-            (
-                "Monday",
-                "Idli",
-                "4 pieces • Sambar • Chatni • Egg / Paneer",
-                80,
-                "canteen",
-                1
-            ),
-            (
-                "Tuesday",
-                "Rice & Mixed Veg",
-                "Daal • Salad • Curd",
-                80,
-                "canteen",
-                1
-            ),
-            (
-                "Wednesday",
-                "Roti",
-                "4 pieces • Mixed Veg • Egg Curry / Paneer • Salad • Curd",
-                80,
-                "canteen",
-                1
-            ),
-            (
-                "Thursday",
-                "Veg Chila",
-                "4 pieces • Salad • Paneer • Aachar • Curd",
-                80,
-                "canteen",
-                1
-            ),
-            (
-                "Thursday",
-                "Chowmin",
-                "Salad",
-                80,
-                "canteen",
-                1
-            ),
-            (
-                "Friday",
-                "Dalia Khichdi",
-                "Papor • Salad • Curd • Chatni",
-                80,
-                "canteen",
-                1
-            ),
-            (
-                "Saturday",
-                "Parota",
-                "4 pieces • Aalur Dom • Aachar",
-                80,
-                "canteen",
-                1
-            )
-        ]
-
-        connection.executemany("""
-            INSERT INTO menu_items
-            (day, name, description, price, category, available)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, menu_items)
-
-        connection.commit()
-
-    connection.close()
-
-
-# ================================
-# HOME
-# ================================
-
-@app.route("/")
-def home():
-
-    return jsonify({
-        "message": "Aaheli's Aahar backend is running!"
-    })
 
 
 # ================================
@@ -163,50 +75,50 @@ def get_menu():
 # ================================
 
 @app.route("/api/menu", methods=["POST"])
-def add_menu_item():
+def add_menu():
 
     data = request.get_json()
 
-    required_fields = [
-        "day",
-        "name",
-        "description",
-        "price",
-        "category"
-    ]
+    print("ADD REQUEST:", data)
 
-    for field in required_fields:
+    if not data:
+        return jsonify({"error": "No data received"}), 400
 
-        if field not in data:
-            return jsonify({
-                "error": f"Missing field: {field}"
-            }), 400
+    day = data.get("day")
+    name = data.get("name")
+    description = data.get("description", "")
+    price = data.get("price")
+    category = data.get("category")
+
+    if not day or not name or price is None or not category:
+        return jsonify({"error": "Missing required fields"}), 400
 
     connection = get_db()
 
     cursor = connection.execute("""
         INSERT INTO menu_items
         (day, name, description, price, category, available)
-        VALUES (?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, 1)
     """, (
-        data["day"],
-        data["name"],
-        data["description"],
-        data["price"],
-        data["category"],
-        data.get("available", 1)
+        day,
+        name,
+        description,
+        price,
+        category
     ))
 
     connection.commit()
 
-    item = connection.execute(
-        "SELECT * FROM menu_items WHERE id = ?",
-        (cursor.lastrowid,)
-    ).fetchone()
+    new_id = cursor.lastrowid
 
     connection.close()
 
-    return jsonify(dict(item)), 201
+    print("ADDED ITEM ID:", new_id)
+
+    return jsonify({
+        "message": "Menu item added",
+        "id": new_id
+    }), 201
 
 
 # ================================
@@ -214,140 +126,134 @@ def add_menu_item():
 # ================================
 
 @app.route("/api/menu/<int:item_id>", methods=["PUT"])
-def update_menu_item(item_id):
+def update_menu(item_id):
 
     data = request.get_json()
 
+    print("UPDATE REQUEST:", item_id, data)
+
+    if not data:
+        return jsonify({"error": "No data received"}), 400
+
+    day = data.get("day")
+    name = data.get("name")
+    description = data.get("description", "")
+    price = data.get("price")
+    category = data.get("category")
+
+    if not day or not name or price is None or not category:
+        return jsonify({"error": "Missing required fields"}), 400
+
     connection = get_db()
 
-    existing_item = connection.execute(
-        "SELECT * FROM menu_items WHERE id = ?",
-        (item_id,)
-    ).fetchone()
-
-    if existing_item is None:
-
-        connection.close()
-
-        return jsonify({
-            "error": "Menu item not found"
-        }), 404
-
-    connection.execute("""
+    cursor = connection.execute("""
         UPDATE menu_items
-        SET day = ?,
+        SET
+            day = ?,
             name = ?,
             description = ?,
             price = ?,
-            category = ?,
-            available = ?
+            category = ?
         WHERE id = ?
     """, (
-        data.get("day", existing_item["day"]),
-        data.get("name", existing_item["name"]),
-        data.get("description", existing_item["description"]),
-        data.get("price", existing_item["price"]),
-        data.get("category", existing_item["category"]),
-        data.get("available", existing_item["available"]),
+        day,
+        name,
+        description,
+        price,
+        category,
         item_id
     ))
 
     connection.commit()
 
-    updated_item = connection.execute(
-        "SELECT * FROM menu_items WHERE id = ?",
-        (item_id,)
-    ).fetchone()
+    changed = cursor.rowcount
 
     connection.close()
 
-    return jsonify(dict(updated_item))
+    print("ROWS UPDATED:", changed)
 
-
-# ================================
-# DELETE MENU ITEM
-# ================================
-
-@app.route("/api/menu/<int:item_id>", methods=["DELETE"])
-def delete_menu_item(item_id):
-
-    connection = get_db()
-
-    existing_item = connection.execute(
-        "SELECT * FROM menu_items WHERE id = ?",
-        (item_id,)
-    ).fetchone()
-
-    if existing_item is None:
-
-        connection.close()
-
-        return jsonify({
-            "error": "Menu item not found"
-        }), 404
-
-    connection.execute(
-        "DELETE FROM menu_items WHERE id = ?",
-        (item_id,)
-    )
-
-    connection.commit()
-    connection.close()
+    if changed == 0:
+        return jsonify({"error": "Menu item not found"}), 404
 
     return jsonify({
-        "message": "Menu item deleted successfully"
+        "message": "Menu item updated"
     })
 
 
 # ================================
-# ENABLE / DISABLE MENU ITEM
+# ENABLE / DISABLE
 # ================================
 
 @app.route("/api/menu/<int:item_id>/availability", methods=["PATCH"])
-def change_availability(item_id):
+def toggle_availability(item_id):
 
     data = request.get_json()
 
-    if "available" not in data:
+    print("AVAILABILITY REQUEST:", item_id, data)
 
-        return jsonify({
-            "error": "available field is required"
-        }), 400
+    available = data.get("available")
+
+    if available is None:
+        return jsonify({"error": "Availability missing"}), 400
 
     connection = get_db()
 
-    existing_item = connection.execute(
-        "SELECT * FROM menu_items WHERE id = ?",
-        (item_id,)
-    ).fetchone()
-
-    if existing_item is None:
-
-        connection.close()
-
-        return jsonify({
-            "error": "Menu item not found"
-        }), 404
-
-    connection.execute("""
+    cursor = connection.execute("""
         UPDATE menu_items
         SET available = ?
         WHERE id = ?
     """, (
-        data["available"],
+        1 if available else 0,
         item_id
     ))
 
     connection.commit()
 
-    updated_item = connection.execute(
-        "SELECT * FROM menu_items WHERE id = ?",
-        (item_id,)
-    ).fetchone()
+    changed = cursor.rowcount
 
     connection.close()
 
-    return jsonify(dict(updated_item))
+    print("AVAILABILITY UPDATED:", changed)
+
+    if changed == 0:
+        return jsonify({"error": "Menu item not found"}), 404
+
+    return jsonify({
+        "message": "Availability updated",
+        "available": bool(available)
+    })
+
+
+# ================================
+# DELETE
+# ================================
+
+@app.route("/api/menu/<int:item_id>", methods=["DELETE"])
+def delete_menu(item_id):
+
+    print("DELETE REQUEST:", item_id)
+
+    connection = get_db()
+
+    cursor = connection.execute("""
+        DELETE FROM menu_items
+        WHERE id = ?
+    """, (item_id,))
+
+    connection.commit()
+
+    changed = cursor.rowcount
+
+    connection.close()
+
+    print("ROWS DELETED:", changed)
+
+    if changed == 0:
+        return jsonify({"error": "Menu item not found"}), 404
+
+    return jsonify({
+        "message": "Menu item deleted"
+    })
 
 
 # ================================
@@ -357,10 +263,12 @@ def change_availability(item_id):
 if __name__ == "__main__":
 
     create_database()
-    add_initial_menu()
+
+    print("Database ready.")
+    print("Starting Aaheli's Aahar backend...")
 
     app.run(
-        debug=True,
         host="0.0.0.0",
-        port=5000
+        port=5000,
+        debug=True
     )
