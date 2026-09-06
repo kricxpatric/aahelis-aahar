@@ -1324,3 +1324,530 @@ if (document.getElementById("totalOrders")) {
     loadDashboard();
 
 }
+
+const SPECIAL_MENUS_API_URL =
+    `http://${window.location.hostname}:5000/api/special-menus`;
+
+let specialMenus = [];
+
+
+// ================================
+// LOAD SPECIAL MENUS
+// ================================
+
+async function loadSpecialMenus() {
+
+    const list = document.getElementById("specialMenusList");
+
+    if (!list) return;
+
+    list.innerHTML = `
+        <div class="orders-loading">
+            Loading special menus...
+        </div>
+    `;
+
+    try {
+
+        const response = await fetch(SPECIAL_MENUS_API_URL);
+
+        if (!response.ok) {
+            throw new Error("Could not load special menus.");
+        }
+
+        specialMenus = await response.json();
+
+        renderSpecialMenus(specialMenus);
+
+    } catch (error) {
+
+        console.error(error);
+
+        list.innerHTML = `
+            <div class="orders-empty">
+                Could not load special menus.
+            </div>
+        `;
+    }
+}
+
+
+// ================================
+// RENDER SPECIAL MENUS
+// ================================
+
+function renderSpecialMenus(menus) {
+
+    const list = document.getElementById("specialMenusList");
+
+    if (!list) return;
+
+    if (!menus.length) {
+
+        list.innerHTML = `
+            <div class="orders-empty">
+                <h3>No Special Menus Yet</h3>
+                <p>
+                    Add your first special menu using the button above.
+                </p>
+            </div>
+        `;
+
+        return;
+    }
+
+
+    list.innerHTML = menus.map(function(menu) {
+
+        const statusClass =
+            menu.status === "Active"
+                ? "active"
+                : "hidden";
+
+
+        return `
+
+            <div class="special-menu-card">
+
+                <div class="special-menu-image">
+
+                    <img
+                        src="${menu.image_url}"
+                        alt="${escapeHTML(menu.title)}"
+                    >
+
+                </div>
+
+
+                <div class="special-menu-info">
+
+                    <div class="special-menu-header">
+
+                        <div>
+
+                            <h3>
+                                ${escapeHTML(menu.title)}
+                            </h3>
+
+                            ${
+                                menu.description
+                                ? `<p>
+                                    ${escapeHTML(menu.description)}
+                                   </p>`
+                                : ""
+                            }
+
+                        </div>
+
+
+                        <span class="special-menu-status ${statusClass}">
+                            ${escapeHTML(menu.status)}
+                        </span>
+
+                    </div>
+
+
+                    <div class="special-menu-actions">
+
+                        <button
+                            class="edit-btn"
+                            onclick="editSpecialMenu(${menu.id})">
+                            Edit
+                        </button>
+
+
+                        <button
+                            class="toggle-btn"
+                            onclick="toggleSpecialMenu(${menu.id})">
+                            ${
+                                menu.status === "Active"
+                                ? "Hide"
+                                : "Show"
+                            }
+                        </button>
+
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteSpecialMenu(${menu.id})">
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }).join("");
+}
+
+
+// ================================
+// OPEN ADD MODAL
+// ================================
+
+function openSpecialMenuModal() {
+
+    const modal =
+        document.getElementById("specialMenuModal");
+
+    const form =
+        document.getElementById("specialMenuForm");
+
+    document.getElementById(
+        "specialMenuModalTitle"
+    ).textContent = "Add Special Menu";
+
+    form.reset();
+
+    document.getElementById(
+        "specialMenuId"
+    ).value = "";
+
+    modal.classList.add("active");
+}
+
+
+// ================================
+// CLOSE MODAL
+// ================================
+
+function closeSpecialMenuModal() {
+
+    const modal =
+        document.getElementById("specialMenuModal");
+
+    modal.classList.remove("active");
+}
+
+
+// ================================
+// SAVE SPECIAL MENU
+// ================================
+
+const specialMenuForm =
+    document.getElementById("specialMenuForm");
+
+
+if (specialMenuForm) {
+
+    specialMenuForm.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const id =
+                document.getElementById(
+                    "specialMenuId"
+                ).value;
+
+
+            const title =
+                document.getElementById(
+                    "specialMenuTitle"
+                ).value.trim();
+
+
+            const description =
+                document.getElementById(
+                    "specialMenuDescription"
+                ).value.trim();
+
+
+            const status =
+                document.getElementById(
+                    "specialMenuStatus"
+                ).value;
+
+
+            const imageInput =
+                document.getElementById(
+                    "specialMenuImage"
+                );
+
+
+            if (!title) {
+
+                alert("Please enter a menu title.");
+
+                return;
+            }
+
+
+            // Create form data
+            const formData = new FormData();
+
+            formData.append("title", title);
+            formData.append(
+                "description",
+                description
+            );
+            formData.append("status", status);
+
+
+            // Add image only if selected
+            if (imageInput.files.length > 0) {
+
+                formData.append(
+                    "image",
+                    imageInput.files[0]
+                );
+            }
+
+
+            try {
+
+                let response;
+
+
+                if (id) {
+
+                    // EDIT
+                    response = await fetch(
+                        `${SPECIAL_MENUS_API_URL}/${id}`,
+                        {
+                            method: "PUT",
+                            body: formData
+                        }
+                    );
+
+                } else {
+
+                    // ADD
+                    if (imageInput.files.length === 0) {
+
+                        alert(
+                            "Please select a menu image."
+                        );
+
+                        return;
+                    }
+
+
+                    response = await fetch(
+                        SPECIAL_MENUS_API_URL,
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        "Could not save special menu."
+                    );
+                }
+
+
+                alert(
+                    id
+                        ? "Special menu updated successfully!"
+                        : "Special menu added successfully!"
+                );
+
+
+                closeSpecialMenuModal();
+
+                loadSpecialMenus();
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(error.message);
+            }
+
+        }
+    );
+
+}
+
+
+// ================================
+// EDIT SPECIAL MENU
+// ================================
+
+function editSpecialMenu(id) {
+
+    const menu =
+        specialMenus.find(
+            function(item) {
+                return item.id === id;
+            }
+        );
+
+
+    if (!menu) return;
+
+
+    document.getElementById(
+        "specialMenuModalTitle"
+    ).textContent = "Edit Special Menu";
+
+
+    document.getElementById(
+        "specialMenuId"
+    ).value = menu.id;
+
+
+    document.getElementById(
+        "specialMenuTitle"
+    ).value = menu.title;
+
+
+    document.getElementById(
+        "specialMenuDescription"
+    ).value = menu.description || "";
+
+
+    document.getElementById(
+        "specialMenuStatus"
+    ).value = menu.status;
+
+
+    document.getElementById(
+        "specialMenuImage"
+    ).value = "";
+
+
+    document.getElementById(
+        "specialMenuModal"
+    ).classList.add("active");
+}
+
+
+// ================================
+// TOGGLE ACTIVE / HIDDEN
+// ================================
+
+async function toggleSpecialMenu(id) {
+
+    const menu =
+        specialMenus.find(
+            function(item) {
+                return item.id === id;
+            }
+        );
+
+
+    if (!menu) return;
+
+
+    const newStatus =
+        menu.status === "Active"
+            ? "Hidden"
+            : "Active";
+
+
+    try {
+
+        const response = await fetch(
+            `${SPECIAL_MENUS_API_URL}/${id}/status`,
+            {
+                method: "PATCH",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+                    status: newStatus
+                })
+            }
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Could not update status."
+            );
+        }
+
+
+        loadSpecialMenus();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+    }
+}
+
+
+// ================================
+// DELETE SPECIAL MENU
+// ================================
+
+async function deleteSpecialMenu(id) {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this special menu?"
+        );
+
+
+    if (!confirmed) return;
+
+
+    try {
+
+        const response = await fetch(
+            `${SPECIAL_MENUS_API_URL}/${id}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Could not delete special menu."
+            );
+        }
+
+
+        alert(
+            "Special menu deleted successfully!"
+        );
+
+
+        loadSpecialMenus();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(error.message);
+    }
+}
+
+
+// ================================
+// INITIAL LOAD
+// ================================
+
+if (
+    document.getElementById(
+        "specialMenusList"
+    )
+) {
+
+    loadSpecialMenus();
+}

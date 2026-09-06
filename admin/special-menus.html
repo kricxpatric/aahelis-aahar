@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Special Menus | Aaheli's Aahar Admin</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <h2>Aaheli's</h2>
+            <p>AAHAR ADMIN</p>
+        </div>
+
+        <nav class="admin-nav">
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="orders.html">
+                Orders
+            </a>
+
+            <a href="menu.html">
+                Menu
+            </a>
+
+            <a href="special-menus.html" class="active">
+                Special Menus
+            </a>
+
+            <a href="settings.html">
+                Settings
+            </a>
+
+        </nav>
+
+        <button class="logout-btn" onclick="logout()">
+            Logout
+        </button>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+                <p class="eyebrow">AAHELI'S AAHAR</p>
+                <h1>Special Menus</h1>
+            </div>
+
+            <button class="add-menu-btn" onclick="openSpecialMenuModal()">
+                + Add Special Menu
+            </button>
+
+        </div>
+
+
+        <!-- SPECIAL MENUS -->
+        <section class="special-menu-section">
+
+            <div id="specialMenusList">
+
+                <div class="orders-loading">
+                    Loading special menus...
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer class="admin-footer">
+            Aaheli's Aahar Admin Panel
+        </footer>
+
+    </main>
+
+</div>
+
+
+<!-- ADD / EDIT MODAL -->
+
+<div class="menu-modal" id="specialMenuModal">
+
+    <div class="menu-modal-box">
+
+        <button
+            class="modal-close"
+            onclick="closeSpecialMenuModal()">
+            ×
+        </button>
+
+        <h2 id="specialMenuModalTitle">
+            Add Special Menu
+        </h2>
+
+
+        <form id="specialMenuForm">
+
+            <input
+                type="hidden"
+                id="specialMenuId"
+            >
+
+
+            <label for="specialMenuTitle">
+                Menu Title
+            </label>
+
+            <input
+                type="text"
+                id="specialMenuTitle"
+                placeholder="e.g. Teacher's Day Special"
+                required
+            >
+
+
+            <label for="specialMenuDescription">
+                Description
+            </label>
+
+            <textarea
+                id="specialMenuDescription"
+                placeholder="Optional description"
+            ></textarea>
+
+
+            <label for="specialMenuImage">
+                Menu Image
+            </label>
+
+            <input
+                type="file"
+                id="specialMenuImage"
+                accept="image/*"
+            >
+
+            <small class="image-note">
+                Upload the complete menu design as an image.
+            </small>
+
+
+            <label for="specialMenuStatus">
+                Status
+            </label>
+
+            <select id="specialMenuStatus">
+
+                <option value="Active">
+                    Active
+                </option>
+
+                <option value="Hidden">
+                    Hidden
+                </option>
+
+            </select>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="closeSpecialMenuModal()">
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="save-btn">
+                    Save Menu
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>

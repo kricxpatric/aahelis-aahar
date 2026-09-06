@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Settings | Aaheli's Aahar Admin</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <h2>Aaheli's</h2>
+            <p>AAHAR ADMIN</p>
+        </div>
+
+        <nav class="admin-nav">
+
+            <a href="dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="orders.html">
+                Orders
+            </a>
+
+            <a href="menu.html">
+                Menu
+            </a>
+
+            <a href="special-menus.html">
+                Special Menus
+            </a>
+
+            <a href="settings.html" class="active">
+                Settings
+            </a>
+
+        </nav>
+
+        <button class="logout-btn" onclick="logout()">
+            Logout
+        </button>
+
+    </aside>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+                <p class="eyebrow">AAHELI'S AAHAR</p>
+                <h1>Settings</h1>
+            </div>
+
+        </div>
+
+
+        <!-- ================= BUSINESS INFORMATION ================= -->
+
+        <section class="settings-section">
+
+            <div class="settings-card">
+
+                <div class="settings-card-header">
+                    <div>
+                        <h2>Business Information</h2>
+                        <p>Manage the basic information shown for Aaheli's Aahar.</p>
+                    </div>
+                </div>
+
+                <form id="businessSettingsForm">
+
+                    <div class="settings-grid">
+
+                        <div class="settings-field">
+                            <label for="businessName">
+                                Business Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="businessName"
+                                value="Aaheli's Aahar"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="settings-field">
+                            <label for="phone1">
+                                Phone Number 1
+                            </label>
+
+                            <input
+                                type="text"
+                                id="phone1"
+                                value="8902255928"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="settings-field">
+                            <label for="phone2">
+                                Phone Number 2
+                            </label>
+
+                            <input
+                                type="text"
+                                id="phone2"
+                                value="8284067220"
+                            >
+                        </div>
+
+
+                        <div class="settings-field">
+                            <label for="preOrder">
+                                Pre-order Information
+                            </label>
+
+                            <input
+                                type="text"
+                                id="preOrder"
+                                value="Pre-order 1–2 days before"
+                            >
+                        </div>
+
+                    </div>
+
+
+                    <div class="settings-field">
+
+                        <label for="tagline">
+                            Tagline
+                        </label>
+
+                        <input
+                            type="text"
+                            id="tagline"
+                            value="ভালোবাসা দিয়ে রান্না, ঘরের স্বাদে পরিবেশন"
+                        >
+
+                    </div>
+
+
+                    <div class="settings-field">
+
+                        <label for="deliveryInfo">
+                            Delivery Information
+                        </label>
+
+                        <textarea id="deliveryInfo">Delivery available</textarea>
+
+                    </div>
+
+
+                    <div class="settings-actions">
+
+                        <button
+                            type="submit"
+                            class="save-settings-btn"
+                        >
+                            Save Business Information
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+
+            <!-- ================= BUSINESS STATUS ================= -->
+
+            <div class="settings-card">
+
+                <div class="settings-card-header">
+
+                    <div>
+                        <h2>Business Status</h2>
+                        <p>Control whether the business is currently accepting orders.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="status-setting">
+
+                    <div>
+                        <strong>Accepting Orders</strong>
+
+                        <p>
+                            Turn this off when the kitchen is temporarily closed.
+                        </p>
+                    </div>
+
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="acceptingOrders"
+                            checked
+                        >
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+
+                <div class="status-preview">
+
+                    <span class="status-dot"></span>
+
+                    <strong id="businessStatusText">
+                        Currently Accepting Orders
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================= ORDER SETTINGS ================= -->
+
+            <div class="settings-card">
+
+                <div class="settings-card-header">
+
+                    <div>
+                        <h2>Order Settings</h2>
+
+                        <p>
+                            Configure the daily order timing.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="settings-grid">
+
+                    <div class="settings-field">
+
+                        <label for="lunchCutoff">
+                            Lunch Order Cutoff
+                        </label>
+
+                        <input
+                            type="time"
+                            id="lunchCutoff"
+                            value="09:00"
+                        >
+
+                        <small>
+                            Customers should order lunch before this time.
+                        </small>
+
+                    </div>
+
+
+                    <div class="settings-field">
+
+                        <label for="dinnerCutoff">
+                            Dinner Order Cutoff
+                        </label>
+
+                        <input
+                            type="time"
+                            id="dinnerCutoff"
+                            value="17:00"
+                        >
+
+                        <small>
+                            Customers should order dinner before this time.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="settings-actions">
+
+                    <button
+                        type="button"
+                        class="save-settings-btn"
+                        id="saveOrderSettingsBtn"
+                    >
+                        Save Order Settings
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================= ADMIN ACCOUNT ================= -->
+
+            <div class="settings-card">
+
+                <div class="settings-card-header">
+
+                    <div>
+
+                        <h2>Admin Account</h2>
+
+                        <p>
+                            Change the administrator login credentials.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form id="adminAccountForm">
+
+                    <div class="settings-grid">
+
+                        <div class="settings-field">
+
+                            <label for="adminUsername">
+                                Username
+                            </label>
+
+                            <input
+                                type="text"
+                                id="adminUsername"
+                                value="admin"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="settings-field">
+
+                            <label for="adminPassword">
+                                New Password
+                            </label>
+
+                            <input
+                                type="password"
+                                id="adminPassword"
+                                placeholder="Enter new password"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="settings-actions">
+
+                        <button
+                            type="submit"
+                            class="save-settings-btn"
+                        >
+                            Update Admin Account
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+        <footer class="admin-footer">
+            Aaheli's Aahar Admin Panel
+        </footer>
+
+    </main>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>

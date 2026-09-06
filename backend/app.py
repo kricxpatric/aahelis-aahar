@@ -1,4 +1,6 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
+import os
+from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import sqlite3
 import os
@@ -6,6 +8,11 @@ import os
 app = Flask(__name__)
 CORS(app)
 
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "special_menus")
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATABASE = os.path.join(BASE_DIR, "database.db")
 
@@ -43,6 +50,16 @@ def create_database():
             items TEXT NOT NULL,
             total REAL NOT NULL,
             status TEXT DEFAULT 'Pending',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+    connection.execute("""
+        CREATE TABLE IF NOT EXISTS special_menus (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            description TEXT,
+            image_path TEXT NOT NULL,
+            status TEXT DEFAULT 'Active',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
@@ -497,6 +514,237 @@ def dashboard_stats():
         "today_sales": today_sales,
         "recent_orders": [dict(order) for order in recent_orders]
     })
+
+@app.route("/api/special-menus", methods=["GET"])
+def get_special_menus():
+
+    connection = get_db()
+
+    menus = connection.execute("""
+        SELECT *
+        FROM special_menus
+        ORDER BY datetime(created_at) DESC
+    """).fetchall()
+
+    connection.close()
+
+    result = []
+
+    for menu in menus:
+        item = dict(menu)
+
+        item["image_url"] = (
+            f"http://{request.host}/api/special-menus/image/"
+            f"{item['image_path']}"
+        )
+
+        result.append(item)
+
+    return jsonify(result)
+
+
+@app.route("/api/special-menus", methods=["POST"])
+def create_special_menu():
+
+    title = request.form.get("title", "").strip()
+    description = request.form.get("description", "").strip()
+    status = request.form.get("status", "Active")
+
+    image = request.files.get("image")
+
+    if not title:
+        return jsonify({"error": "Title is required"}), 400
+
+    if not image:
+        return jsonify({"error": "Menu image is required"}), 400
+
+    filename = secure_filename(image.filename)
+
+    if not filename:
+        return jsonify({"error": "Invalid image file"}), 400
+
+    # Add a unique prefix to avoid duplicate filenames
+    import time
+
+    filename = f"{int(time.time())}_{filename}"
+
+    image.save(
+        os.path.join(
+            app.config["UPLOAD_FOLDER"],
+            filename
+        )
+    )
+
+    connection = get_db()
+
+    cursor = connection.execute("""
+        INSERT INTO special_menus
+        (title, description, image_path, status)
+        VALUES (?, ?, ?, ?)
+    """, (
+        title,
+        description,
+        filename,
+        status
+    ))
+
+    connection.commit()
+
+    menu_id = cursor.lastrowid
+
+    connection.close()
+
+    return jsonify({
+        "message": "Special menu created successfully",
+        "id": menu_id
+    }), 201
+
+
+@app.route("/api/special-menus/<int:menu_id>", methods=["PUT"])
+def update_special_menu(menu_id):
+
+    title = request.form.get("title", "").strip()
+    description = request.form.get("description", "").strip()
+    status = request.form.get("status", "Active")
+
+    image = request.files.get("image")
+
+    connection = get_db()
+
+    existing = connection.execute("""
+        SELECT *
+        FROM special_menus
+        WHERE id = ?
+    """, (menu_id,)).fetchone()
+
+    if not existing:
+        connection.close()
+        return jsonify({"error": "Special menu not found"}), 404
+
+    image_path = existing["image_path"]
+
+    if image:
+
+        filename = secure_filename(image.filename)
+
+        if filename:
+
+            import time
+
+            filename = f"{int(time.time())}_{filename}"
+
+            image.save(
+                os.path.join(
+                    app.config["UPLOAD_FOLDER"],
+                    filename
+                )
+            )
+
+            old_file = os.path.join(
+                app.config["UPLOAD_FOLDER"],
+                existing["image_path"]
+            )
+
+            if os.path.exists(old_file):
+                os.remove(old_file)
+
+            image_path = filename
+
+    connection.execute("""
+        UPDATE special_menus
+        SET title = ?,
+            description = ?,
+            image_path = ?,
+            status = ?
+        WHERE id = ?
+    """, (
+        title,
+        description,
+        image_path,
+        status,
+        menu_id
+    ))
+
+    connection.commit()
+    connection.close()
+
+    return jsonify({
+        "message": "Special menu updated successfully"
+    })
+
+
+@app.route("/api/special-menus/<int:menu_id>", methods=["DELETE"])
+def delete_special_menu(menu_id):
+
+    connection = get_db()
+
+    existing = connection.execute("""
+        SELECT *
+        FROM special_menus
+        WHERE id = ?
+    """, (menu_id,)).fetchone()
+
+    if not existing:
+        connection.close()
+        return jsonify({"error": "Special menu not found"}), 404
+
+    image_file = os.path.join(
+        app.config["UPLOAD_FOLDER"],
+        existing["image_path"]
+    )
+
+    if os.path.exists(image_file):
+        os.remove(image_file)
+
+    connection.execute("""
+        DELETE FROM special_menus
+        WHERE id = ?
+    """, (menu_id,))
+
+    connection.commit()
+    connection.close()
+
+    return jsonify({
+        "message": "Special menu deleted successfully"
+    })
+
+
+@app.route("/api/special-menus/<int:menu_id>/status", methods=["PATCH"])
+def update_special_menu_status(menu_id):
+
+    data = request.get_json()
+
+    status = data.get("status")
+
+    if status not in ["Active", "Hidden"]:
+        return jsonify({"error": "Invalid status"}), 400
+
+    connection = get_db()
+
+    connection.execute("""
+        UPDATE special_menus
+        SET status = ?
+        WHERE id = ?
+    """, (
+        status,
+        menu_id
+    ))
+
+    connection.commit()
+    connection.close()
+
+    return jsonify({
+        "message": "Status updated successfully"
+    })
+
+
+@app.route("/api/special-menus/image/<filename>")
+def special_menu_image(filename):
+
+    return send_from_directory(
+        app.config["UPLOAD_FOLDER"],
+        filename
+    )
 
 # ================================
 # START SERVER
