@@ -79,6 +79,26 @@ The website is designed to work on:
 - 📱 Mobile
 - 📲 Tablet
 
+## 🔮 Future Ideas
+
+Aaheli's Aahar can be expanded with more features as the business grows.
+
+- 🛒 **Online Ordering** — Allow customers to select food items, quantities, and place orders directly through the website.
+- 📲 **WhatsApp Ordering** — Add an option to send the selected order directly through WhatsApp.
+- 💳 **Online Payment** — Support UPI and other digital payment methods.
+- 📅 **Dynamic Menu** — Allow daily and weekly menus to be updated easily without editing the website code.
+- 🖼️ **Food Gallery** — Add a dedicated gallery for homemade dishes and special menus.
+- ⭐ **Customer Reviews** — Let customers share ratings and feedback.
+- 📍 **Delivery Area & Location** — Add an interactive map and information about available delivery locations.
+- 📦 **Order Management** — Create a system to manage incoming orders and track their status.
+- 🔔 **Order Notifications** — Provide order confirmation and delivery updates.
+- 📊 **Admin Dashboard** — Allow the business owner to manage menus, prices, orders, and special offers.
+- 📱 **Mobile App / PWA** — Turn the website into an installable mobile application.
+- 📈 **Sales & Analytics** — Track orders, popular dishes, and overall sales.
+- 🤖 **Smart Recommendations** — Suggest popular or suitable dishes to customers based on availability and previous orders.
+
+These features can be introduced gradually as Aaheli's Aahar grows from a simple food delivery website into a complete online food-ordering platform.
+
 ---
 
 ## 🗂️ Project Structure
@@ -102,23 +122,3 @@ Aahelis-Aahar/
     ├── parota.jpg
     └── teacher-day-menu.jpg
 
-
-## 🔮 Future Ideas
-
-Aaheli's Aahar can be expanded with more features as the business grows.
-
-- 🛒 **Online Ordering** — Allow customers to select food items, quantities, and place orders directly through the website.
-- 📲 **WhatsApp Ordering** — Add an option to send the selected order directly through WhatsApp.
-- 💳 **Online Payment** — Support UPI and other digital payment methods.
-- 📅 **Dynamic Menu** — Allow daily and weekly menus to be updated easily without editing the website code.
-- 🖼️ **Food Gallery** — Add a dedicated gallery for homemade dishes and special menus.
-- ⭐ **Customer Reviews** — Let customers share ratings and feedback.
-- 📍 **Delivery Area & Location** — Add an interactive map and information about available delivery locations.
-- 📦 **Order Management** — Create a system to manage incoming orders and track their status.
-- 🔔 **Order Notifications** — Provide order confirmation and delivery updates.
-- 📊 **Admin Dashboard** — Allow the business owner to manage menus, prices, orders, and special offers.
-- 📱 **Mobile App / PWA** — Turn the website into an installable mobile application.
-- 📈 **Sales & Analytics** — Track orders, popular dishes, and overall sales.
-- 🤖 **Smart Recommendations** — Suggest popular or suitable dishes to customers based on availability and previous orders.
-
-These features can be introduced gradually as Aaheli's Aahar grows from a simple food delivery website into a complete online food-ordering platform.
