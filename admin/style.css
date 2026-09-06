@@ -900,3 +900,107 @@ body {
         font-size: 13px;
     }
 }
+
+/* ================================
+   MENU MODAL
+   ================================ */
+
+.menu-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.menu-modal.active {
+    display: flex;
+}
+
+.menu-modal-box {
+    width: 100%;
+    max-width: 500px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 30px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.menu-modal-box h2 {
+    margin: 0 0 25px;
+    font-family: Georgia, serif;
+    color: #263d25;
+}
+
+.modal-close {
+    position: absolute;
+    right: 18px;
+    top: 15px;
+    border: none;
+    background: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #777;
+}
+
+#menuForm label {
+    display: block;
+    margin: 15px 0 7px;
+    font-size: 14px;
+    color: #555;
+}
+
+#menuForm input,
+#menuForm select,
+#menuForm textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #ddd6c7;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+}
+
+#menuForm textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.cancel-btn,
+.save-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 11px 20px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.cancel-btn {
+    background: #eee;
+    color: #555;
+}
+
+.save-btn {
+    background: #263d25;
+    color: white;
+}
+
+@media (max-width: 600px) {
+
+    .menu-modal-box {
+        padding: 24px 20px;
+    }
+
+}
