@@ -63,6 +63,27 @@ def create_database():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
+    connection.execute("""
+        CREATE TABLE IF NOT EXISTS settings (
+            id INTEGER PRIMARY KEY CHECK (id = 1),
+            business_name TEXT DEFAULT 'Aaheli''s Aahar',
+            phone1 TEXT DEFAULT '8902255928',
+            phone2 TEXT DEFAULT '8284067220',
+            tagline TEXT DEFAULT 'ভালোবাসা দিয়ে রান্না, ঘরের স্বাদে পরিবেশন',
+            pre_order TEXT DEFAULT 'Pre-order 1–2 days before',
+            delivery_info TEXT DEFAULT 'Delivery available',
+            accepting_orders INTEGER DEFAULT 1,
+            lunch_cutoff TEXT DEFAULT '09:00',
+            dinner_cutoff TEXT DEFAULT '17:00',
+            admin_username TEXT DEFAULT 'admin',
+            admin_password TEXT DEFAULT 'admin123'
+        )
+    """)
+
+    connection.execute("""
+        INSERT OR IGNORE INTO settings (id)
+        VALUES (1)
+    """)
 
     connection.commit()
     connection.close()
@@ -745,6 +766,182 @@ def special_menu_image(filename):
         app.config["UPLOAD_FOLDER"],
         filename
     )
+
+# =========================================
+# SETTINGS API
+# =========================================
+
+@app.route("/api/settings", methods=["GET"])
+def get_settings():
+
+    connection = get_db()
+
+    settings = connection.execute("""
+        SELECT *
+        FROM settings
+        WHERE id = 1
+    """).fetchone()
+
+    connection.close()
+
+    if not settings:
+        return jsonify({"error": "Settings not found"}), 404
+
+    result = dict(settings)
+
+    # Never send the admin password to the browser
+    result.pop("admin_password", None)
+
+    return jsonify(result)
+
+
+@app.route("/api/settings/business", methods=["PUT"])
+def update_business_settings():
+
+    data = request.get_json()
+
+    business_name = data.get("business_name", "").strip()
+    phone1 = data.get("phone1", "").strip()
+    phone2 = data.get("phone2", "").strip()
+    tagline = data.get("tagline", "").strip()
+    pre_order = data.get("pre_order", "").strip()
+    delivery_info = data.get("delivery_info", "").strip()
+
+    if not business_name:
+        return jsonify({"error": "Business name is required"}), 400
+
+    if not phone1:
+        return jsonify({"error": "Primary phone number is required"}), 400
+
+    connection = get_db()
+
+    connection.execute("""
+        UPDATE settings
+        SET
+            business_name = ?,
+            phone1 = ?,
+            phone2 = ?,
+            tagline = ?,
+            pre_order = ?,
+            delivery_info = ?
+        WHERE id = 1
+    """, (
+        business_name,
+        phone1,
+        phone2,
+        tagline,
+        pre_order,
+        delivery_info
+    ))
+
+    connection.commit()
+    connection.close()
+
+    return jsonify({
+        "message": "Business information updated successfully"
+    })
+
+
+@app.route("/api/settings/status", methods=["PUT"])
+def update_business_status():
+
+    data = request.get_json()
+
+    accepting_orders = data.get("accepting_orders")
+
+    if accepting_orders not in [True, False]:
+        return jsonify({"error": "Invalid business status"}), 400
+
+    connection = get_db()
+
+    connection.execute("""
+        UPDATE settings
+        SET accepting_orders = ?
+        WHERE id = 1
+    """, (
+        1 if accepting_orders else 0,
+    ))
+
+    connection.commit()
+    connection.close()
+
+    return jsonify({
+        "message": "Business status updated successfully"
+    })
+
+
+@app.route("/api/settings/order-times", methods=["PUT"])
+def update_order_times():
+
+    data = request.get_json()
+
+    lunch_cutoff = data.get("lunch_cutoff", "").strip()
+    dinner_cutoff = data.get("dinner_cutoff", "").strip()
+
+    connection = get_db()
+
+    connection.execute("""
+        UPDATE settings
+        SET
+            lunch_cutoff = ?,
+            dinner_cutoff = ?
+        WHERE id = 1
+    """, (
+        lunch_cutoff,
+        dinner_cutoff
+    ))
+
+    connection.commit()
+    connection.close()
+
+    return jsonify({
+        "message": "Order settings updated successfully"
+    })
+
+
+@app.route("/api/settings/admin", methods=["PUT"])
+def update_admin_account():
+
+    data = request.get_json()
+
+    username = data.get("username", "").strip()
+    password = data.get("password", "").strip()
+
+    if not username:
+        return jsonify({"error": "Username is required"}), 400
+
+    connection = get_db()
+
+    if password:
+
+        connection.execute("""
+            UPDATE settings
+            SET
+                admin_username = ?,
+                admin_password = ?
+            WHERE id = 1
+        """, (
+            username,
+            password
+        ))
+
+    else:
+
+        connection.execute("""
+            UPDATE settings
+            SET
+                admin_username = ?
+            WHERE id = 1
+        """, (
+            username,
+        ))
+
+    connection.commit()
+    connection.close()
+
+    return jsonify({
+        "message": "Admin account updated successfully"
+    })
 
 # ================================
 # START SERVER

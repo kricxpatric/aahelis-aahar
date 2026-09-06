@@ -1851,3 +1851,430 @@ if (
 
     loadSpecialMenus();
 }
+
+// =========================================
+// SETTINGS
+// =========================================
+
+const SETTINGS_API_URL =
+    `http://${window.location.hostname}:5000/api/settings`;
+
+
+// =========================================
+// LOAD SETTINGS
+// =========================================
+
+async function loadSettings() {
+
+    const businessName = document.getElementById("businessName");
+
+    if (!businessName) return;
+
+    try {
+
+        const response = await fetch(SETTINGS_API_URL);
+
+        if (!response.ok) {
+            throw new Error("Could not load settings.");
+        }
+
+        const settings = await response.json();
+
+
+        document.getElementById("businessName").value =
+            settings.business_name || "";
+
+        document.getElementById("phone1").value =
+            settings.phone1 || "";
+
+        document.getElementById("phone2").value =
+            settings.phone2 || "";
+
+        document.getElementById("tagline").value =
+            settings.tagline || "";
+
+        document.getElementById("preOrder").value =
+            settings.pre_order || "";
+
+        document.getElementById("deliveryInfo").value =
+            settings.delivery_info || "";
+
+        document.getElementById("acceptingOrders").checked =
+            Number(settings.accepting_orders) === 1;
+
+        document.getElementById("lunchCutoff").value =
+            settings.lunch_cutoff || "09:00";
+
+        document.getElementById("dinnerCutoff").value =
+            settings.dinner_cutoff || "17:00";
+
+        document.getElementById("adminUsername").value =
+            settings.admin_username || "admin";
+
+
+        updateBusinessStatusText();
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Could not load settings.");
+
+    }
+}
+
+
+// =========================================
+// BUSINESS INFORMATION
+// =========================================
+
+const businessSettingsForm =
+    document.getElementById("businessSettingsForm");
+
+if (businessSettingsForm) {
+
+    businessSettingsForm.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+            const data = {
+
+                business_name:
+                    document.getElementById("businessName").value.trim(),
+
+                phone1:
+                    document.getElementById("phone1").value.trim(),
+
+                phone2:
+                    document.getElementById("phone2").value.trim(),
+
+                tagline:
+                    document.getElementById("tagline").value.trim(),
+
+                pre_order:
+                    document.getElementById("preOrder").value.trim(),
+
+                delivery_info:
+                    document.getElementById("deliveryInfo").value.trim()
+
+            };
+
+
+            try {
+
+                const response = await fetch(
+                    `${SETTINGS_API_URL}/business`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify(data)
+                    }
+                );
+
+
+                const result = await response.json();
+
+
+                if (!response.ok) {
+                    throw new Error(
+                        result.error ||
+                        "Could not save business information."
+                    );
+                }
+
+
+                alert(
+                    "Business information saved successfully!"
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(error.message);
+
+            }
+
+        }
+    );
+
+}
+
+
+// =========================================
+// BUSINESS STATUS
+// =========================================
+
+const acceptingOrders =
+    document.getElementById("acceptingOrders");
+
+
+function updateBusinessStatusText() {
+
+    const statusText =
+        document.getElementById("businessStatusText");
+
+    if (!statusText || !acceptingOrders) return;
+
+
+    if (acceptingOrders.checked) {
+
+        statusText.textContent =
+            "Currently Accepting Orders";
+
+    } else {
+
+        statusText.textContent =
+            "Currently Not Accepting Orders";
+
+    }
+
+}
+
+
+if (acceptingOrders) {
+
+    acceptingOrders.addEventListener(
+        "change",
+        async function() {
+
+            updateBusinessStatusText();
+
+            try {
+
+                const response = await fetch(
+                    `${SETTINGS_API_URL}/status`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            accepting_orders:
+                                acceptingOrders.checked
+                        })
+                    }
+                );
+
+
+                const result = await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.error ||
+                        "Could not update business status."
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(error.message);
+
+                acceptingOrders.checked =
+                    !acceptingOrders.checked;
+
+                updateBusinessStatusText();
+
+            }
+
+        }
+    );
+
+}
+
+
+// =========================================
+// ORDER SETTINGS
+// =========================================
+
+const saveOrderSettingsBtn =
+    document.getElementById("saveOrderSettingsBtn");
+
+
+if (saveOrderSettingsBtn) {
+
+    saveOrderSettingsBtn.addEventListener(
+        "click",
+        async function() {
+
+            const lunchCutoff =
+                document.getElementById("lunchCutoff").value;
+
+            const dinnerCutoff =
+                document.getElementById("dinnerCutoff").value;
+
+
+            try {
+
+                const response = await fetch(
+                    `${SETTINGS_API_URL}/order-times`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            lunch_cutoff:
+                                lunchCutoff,
+
+                            dinner_cutoff:
+                                dinnerCutoff
+
+                        })
+                    }
+                );
+
+
+                const result = await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.error ||
+                        "Could not save order settings."
+                    );
+
+                }
+
+
+                alert(
+                    "Order settings saved successfully!"
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(error.message);
+
+            }
+
+        }
+    );
+
+}
+
+
+// =========================================
+// ADMIN ACCOUNT
+// =========================================
+
+const adminAccountForm =
+    document.getElementById("adminAccountForm");
+
+
+if (adminAccountForm) {
+
+    adminAccountForm.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const username =
+                document.getElementById("adminUsername")
+                    .value.trim();
+
+            const password =
+                document.getElementById("adminPassword")
+                    .value.trim();
+
+
+            if (!username) {
+
+                alert("Please enter a username.");
+
+                return;
+
+            }
+
+
+            try {
+
+                const response = await fetch(
+                    `${SETTINGS_API_URL}/admin`,
+                    {
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            username: username,
+
+                            password: password
+
+                        })
+                    }
+                );
+
+
+                const result = await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.error ||
+                        "Could not update admin account."
+                    );
+
+                }
+
+
+                document.getElementById(
+                    "adminPassword"
+                ).value = "";
+
+
+                alert(
+                    "Admin account updated successfully!"
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(error.message);
+
+            }
+
+        }
+    );
+
+}
+
+
+// =========================================
+// START SETTINGS
+// =========================================
+
+if (document.getElementById("businessName")) {
+
+    loadSettings();
+
+}
