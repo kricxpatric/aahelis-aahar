@@ -256,6 +256,191 @@ def delete_menu(item_id):
     })
 
 
+
+# ================================
+# ORDERS API
+# ================================
+
+# GET ALL ORDERS
+@app.route("/api/orders", methods=["GET"])
+def get_orders():
+
+    connection = get_db()
+
+    orders = connection.execute("""
+        SELECT * FROM orders
+        ORDER BY datetime(created_at) DESC
+    """).fetchall()
+
+    connection.close()
+
+    return jsonify([dict(order) for order in orders])
+
+
+# GET SINGLE ORDER
+@app.route("/api/orders/<int:order_id>", methods=["GET"])
+def get_order(order_id):
+
+    connection = get_db()
+
+    order = connection.execute("""
+        SELECT * FROM orders
+        WHERE id = ?
+    """, (order_id,)).fetchone()
+
+    connection.close()
+
+    if not order:
+        return jsonify({
+            "error": "Order not found"
+        }), 404
+
+    return jsonify(dict(order))
+
+
+# CREATE ORDER
+@app.route("/api/orders", methods=["POST"])
+def create_order():
+
+    data = request.get_json()
+
+    print("NEW ORDER:", data)
+
+    if not data:
+        return jsonify({
+            "error": "No data received"
+        }), 400
+
+    customer_name = data.get("customer_name")
+    phone = data.get("phone")
+    address = data.get("address", "")
+    items = data.get("items")
+    total = data.get("total")
+
+    if not customer_name or not phone or not items or total is None:
+        return jsonify({
+            "error": "Missing required fields"
+        }), 400
+
+    connection = get_db()
+
+    cursor = connection.execute("""
+        INSERT INTO orders
+        (customer_name, phone, address, items, total, status)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (
+        customer_name,
+        phone,
+        address,
+        items,
+        total,
+        "Pending"
+    ))
+
+    connection.commit()
+
+    order_id = cursor.lastrowid
+
+    connection.close()
+
+    print("ORDER CREATED:", order_id)
+
+    return jsonify({
+        "message": "Order created successfully",
+        "id": order_id
+    }), 201
+
+
+# UPDATE ORDER STATUS
+@app.route("/api/orders/<int:order_id>/status", methods=["PATCH"])
+def update_order_status(order_id):
+
+    data = request.get_json()
+
+    if not data or "status" not in data:
+        return jsonify({
+            "error": "Status is required"
+        }), 400
+
+    status = data["status"]
+
+    allowed_statuses = [
+        "Pending",
+        "Confirmed",
+        "Preparing",
+        "Ready",
+        "Out for Delivery",
+        "Completed",
+        "Cancelled"
+    ]
+
+    if status not in allowed_statuses:
+        return jsonify({
+            "error": "Invalid order status"
+        }), 400
+
+    connection = get_db()
+
+    cursor = connection.execute("""
+        UPDATE orders
+        SET status = ?
+        WHERE id = ?
+    """, (
+        status,
+        order_id
+    ))
+
+    connection.commit()
+
+    changed = cursor.rowcount
+
+    connection.close()
+
+    if changed == 0:
+        return jsonify({
+            "error": "Order not found"
+        }), 404
+
+    print(
+        "ORDER STATUS UPDATED:",
+        order_id,
+        status
+    )
+
+    return jsonify({
+        "message": "Order status updated",
+        "status": status
+    })
+
+
+# DELETE ORDER
+@app.route("/api/orders/<int:order_id>", methods=["DELETE"])
+def delete_order(order_id):
+
+    connection = get_db()
+
+    cursor = connection.execute("""
+        DELETE FROM orders
+        WHERE id = ?
+    """, (order_id,))
+
+    connection.commit()
+
+    changed = cursor.rowcount
+
+    connection.close()
+
+    if changed == 0:
+        return jsonify({
+            "error": "Order not found"
+        }), 404
+
+    print("ORDER DELETED:", order_id)
+
+    return jsonify({
+        "message": "Order deleted"
+    })
+
 # ================================
 # START SERVER
 # ================================

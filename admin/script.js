@@ -585,3 +585,574 @@ async function deleteItem(id) {
 if (document.querySelector(".admin-food-list")) {
     loadMenu();
 }
+
+// ========================================
+// ORDERS MANAGEMENT
+// ========================================
+
+const ORDERS_API_URL =
+    `http://${window.location.hostname}:5000/api/orders`;
+
+let allOrders = [];
+
+
+// ========================================
+// LOAD ORDERS
+// ========================================
+
+async function loadOrders() {
+
+    const ordersList = document.getElementById("ordersList");
+
+    if (!ordersList) {
+        return;
+    }
+
+    ordersList.innerHTML = `
+        <div class="orders-loading">
+            Loading orders...
+        </div>
+    `;
+
+    try {
+
+        const response = await fetch(ORDERS_API_URL);
+
+        if (!response.ok) {
+            throw new Error("Could not load orders.");
+        }
+
+        allOrders = await response.json();
+
+        renderOrders(allOrders);
+
+    } catch (error) {
+
+        console.error("ORDERS ERROR:", error);
+
+        ordersList.innerHTML = `
+            <div class="orders-empty">
+                <h3>Unable to load orders</h3>
+                <p>Make sure the Flask backend is running.</p>
+            </div>
+        `;
+
+    }
+}
+
+
+// ========================================
+// RENDER ORDERS
+// ========================================
+
+function renderOrders(orders) {
+
+    const ordersList =
+        document.getElementById("ordersList");
+
+    if (!ordersList) {
+        return;
+    }
+
+
+    if (orders.length === 0) {
+
+        ordersList.innerHTML = `
+            <div class="orders-empty">
+
+                <div class="empty-icon">📦</div>
+
+                <h3>No orders yet</h3>
+
+                <p>
+                    Customer orders will appear here.
+                </p>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    ordersList.innerHTML = "";
+
+
+    orders.forEach(function (order) {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "order-card";
+
+
+        card.innerHTML = `
+
+            <div class="order-card-top">
+
+                <div>
+                    <span class="order-number">
+                        Order #${order.id}
+                    </span>
+
+                    <small>
+                        ${formatOrderDate(order.created_at)}
+                    </small>
+                </div>
+
+                <span class="order-status ${getStatusClass(order.status)}">
+                    ${order.status}
+                </span>
+
+            </div>
+
+
+            <div class="order-customer">
+
+                <h3>${escapeHTML(order.customer_name)}</h3>
+
+                <p>📞 ${escapeHTML(order.phone)}</p>
+
+                ${
+                    order.address
+                    ? `<p>📍 ${escapeHTML(order.address)}</p>`
+                    : ""
+                }
+
+            </div>
+
+
+            <div class="order-items">
+
+                <strong>Items</strong>
+
+                <p>
+                    ${escapeHTML(order.items)}
+                </p>
+
+            </div>
+
+
+            <div class="order-card-bottom">
+
+                <strong class="order-total">
+                    ₹${Number(order.total).toFixed(2)}
+                </strong>
+
+
+                <div class="order-actions">
+
+                    <button
+                        type="button"
+                        onclick="viewOrder(${order.id})">
+                        View
+                    </button>
+
+
+                    <select
+                        onchange="changeOrderStatus(${order.id}, this.value)">
+
+                        ${getStatusOptions(order.status)}
+
+                    </select>
+
+
+                    <button
+                        type="button"
+                        class="delete-order-btn"
+                        onclick="deleteOrder(${order.id})">
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        ordersList.appendChild(card);
+
+    });
+
+}
+
+
+// ========================================
+// STATUS OPTIONS
+// ========================================
+
+function getStatusOptions(currentStatus) {
+
+    const statuses = [
+        "Pending",
+        "Confirmed",
+        "Preparing",
+        "Ready",
+        "Out for Delivery",
+        "Completed",
+        "Cancelled"
+    ];
+
+
+    return statuses.map(function (status) {
+
+        return `
+            <option
+                value="${status}"
+                ${status === currentStatus ? "selected" : ""}>
+                ${status}
+            </option>
+        `;
+
+    }).join("");
+
+}
+
+
+// ========================================
+// CHANGE STATUS
+// ========================================
+
+async function changeOrderStatus(id, status) {
+
+    try {
+
+        const response = await fetch(
+            `${ORDERS_API_URL}/${id}/status`,
+            {
+                method: "PATCH",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    status: status
+                })
+            }
+        );
+
+
+        const result = await response.json();
+
+
+        if (!response.ok) {
+
+            alert(
+                result.error ||
+                "Could not update order status."
+            );
+
+            return;
+
+        }
+
+
+        await loadOrders();
+
+
+    } catch (error) {
+
+        console.error(
+            "STATUS ERROR:",
+            error
+        );
+
+        alert(
+            "Could not connect to the backend."
+        );
+
+    }
+
+}
+
+
+// ========================================
+// VIEW ORDER
+// ========================================
+
+async function viewOrder(id) {
+
+    try {
+
+        const response = await fetch(
+            `${ORDERS_API_URL}/${id}`
+        );
+
+
+        if (!response.ok) {
+            throw new Error("Order not found.");
+        }
+
+
+        const order =
+            await response.json();
+
+
+        const details =
+            document.getElementById("orderDetails");
+
+
+        details.innerHTML = `
+
+            <div class="order-detail-row">
+                <span>Order ID</span>
+                <strong>#${order.id}</strong>
+            </div>
+
+            <div class="order-detail-row">
+                <span>Customer</span>
+                <strong>
+                    ${escapeHTML(order.customer_name)}
+                </strong>
+            </div>
+
+            <div class="order-detail-row">
+                <span>Phone</span>
+                <strong>
+                    ${escapeHTML(order.phone)}
+                </strong>
+            </div>
+
+            <div class="order-detail-row">
+                <span>Address</span>
+                <strong>
+                    ${escapeHTML(order.address || "Not provided")}
+                </strong>
+            </div>
+
+            <div class="order-detail-items">
+                <span>Items</span>
+
+                <p>
+                    ${escapeHTML(order.items)}
+                </p>
+            </div>
+
+            <div class="order-detail-row">
+                <span>Total</span>
+                <strong class="detail-total">
+                    ₹${Number(order.total).toFixed(2)}
+                </strong>
+            </div>
+
+            <div class="order-detail-row">
+                <span>Status</span>
+                <strong>
+                    ${escapeHTML(order.status)}
+                </strong>
+            </div>
+
+            <div class="order-detail-row">
+                <span>Placed</span>
+                <strong>
+                    ${formatOrderDate(order.created_at)}
+                </strong>
+            </div>
+
+        `;
+
+
+        document
+            .getElementById("orderModal")
+            .classList.add("active");
+
+
+    } catch (error) {
+
+        console.error(
+            "VIEW ORDER ERROR:",
+            error
+        );
+
+        alert("Could not load order details.");
+
+    }
+
+}
+
+
+// ========================================
+// CLOSE ORDER MODAL
+// ========================================
+
+function closeOrderModal() {
+
+    const modal =
+        document.getElementById("orderModal");
+
+    if (modal) {
+        modal.classList.remove("active");
+    }
+
+}
+
+
+// ========================================
+// DELETE ORDER
+// ========================================
+
+async function deleteOrder(id) {
+
+    const confirmed = confirm(
+        `Delete Order #${id}?`
+    );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    try {
+
+        const response = await fetch(
+            `${ORDERS_API_URL}/${id}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+
+        const result =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            alert(
+                result.error ||
+                "Could not delete order."
+            );
+
+            return;
+
+        }
+
+
+        await loadOrders();
+
+
+    } catch (error) {
+
+        console.error(
+            "DELETE ORDER ERROR:",
+            error
+        );
+
+        alert(
+            "Could not connect to the backend."
+        );
+
+    }
+
+}
+
+
+// ========================================
+// ORDER FILTERS
+// ========================================
+
+const orderFilterButtons =
+    document.querySelectorAll(".order-filter-btn");
+
+
+orderFilterButtons.forEach(function (button) {
+
+    button.addEventListener("click", function () {
+
+        orderFilterButtons.forEach(function (item) {
+            item.classList.remove("active");
+        });
+
+
+        button.classList.add("active");
+
+
+        const status =
+            button.dataset.status;
+
+
+        if (status === "all") {
+
+            renderOrders(allOrders);
+
+        } else {
+
+            const filtered =
+                allOrders.filter(function (order) {
+                    return order.status === status;
+                });
+
+            renderOrders(filtered);
+
+        }
+
+    });
+
+});
+
+
+// ========================================
+// ORDER HELPERS
+// ========================================
+
+function getStatusClass(status) {
+
+    return status
+        .toLowerCase()
+        .replaceAll(" ", "-");
+
+}
+
+
+function formatOrderDate(dateString) {
+
+    if (!dateString) {
+        return "";
+    }
+
+
+    const date =
+        new Date(
+            dateString.replace(" ", "T") + "Z"
+        );
+
+
+    if (isNaN(date.getTime())) {
+        return dateString;
+    }
+
+
+    return date.toLocaleString(
+        "en-IN",
+        {
+            dateStyle: "medium",
+            timeStyle: "short"
+        }
+    );
+
+}
+
+
+function escapeHTML(value) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        value ?? "";
+
+    return div.innerHTML;
+
+}
+
+
+// ========================================
+// LOAD ORDERS WHEN ORDERS PAGE OPENS
+// ========================================
+
+if (document.getElementById("ordersList")) {
+    loadOrders();
+}

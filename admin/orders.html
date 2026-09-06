@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Orders | Aaheli's Aahar Admin</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside class="sidebar">
+
+            <div class="brand">
+                <h2>Aaheli's</h2>
+                <p>AAHAR ADMIN</p>
+            </div>
+
+            <nav class="admin-nav">
+
+                <a href="dashboard.html">
+                    Dashboard
+                </a>
+
+                <a href="orders.html" class="active">
+                    Orders
+                </a>
+
+                <a href="menu.html">
+                    Menu
+                </a>
+
+                <a href="special-menus.html">
+                    Special Menus
+                </a>
+
+                <a href="settings.html">
+                    Settings
+                </a>
+
+            </nav>
+
+            <button class="logout-btn" onclick="logout()">
+                Logout
+            </button>
+
+        </aside>
+
+
+        <!-- ================= MAIN CONTENT ================= -->
+
+        <main class="main-content">
+
+            <div class="topbar">
+
+                <div>
+                    <p class="eyebrow">AAHELI'S AAHAR</p>
+                    <h1>Orders</h1>
+                </div>
+
+                <button class="refresh-btn" onclick="loadOrders()">
+                    ↻ Refresh
+                </button>
+
+            </div>
+
+
+            <!-- ================= ORDER FILTER ================= -->
+
+            <div class="order-filter">
+
+                <button
+                    class="order-filter-btn active"
+                    data-status="all">
+                    All
+                </button>
+
+                <button
+                    class="order-filter-btn"
+                    data-status="Pending">
+                    Pending
+                </button>
+
+                <button
+                    class="order-filter-btn"
+                    data-status="Confirmed">
+                    Confirmed
+                </button>
+
+                <button
+                    class="order-filter-btn"
+                    data-status="Preparing">
+                    Preparing
+                </button>
+
+                <button
+                    class="order-filter-btn"
+                    data-status="Ready">
+                    Ready
+                </button>
+
+                <button
+                    class="order-filter-btn"
+                    data-status="Out for Delivery">
+                    Out for Delivery
+                </button>
+
+                <button
+                    class="order-filter-btn"
+                    data-status="Completed">
+                    Completed
+                </button>
+
+                <button
+                    class="order-filter-btn"
+                    data-status="Cancelled">
+                    Cancelled
+                </button>
+
+            </div>
+
+
+            <!-- ================= ORDERS ================= -->
+
+            <section class="orders-section">
+
+                <div id="ordersList">
+
+                    <div class="orders-loading">
+                        Loading orders...
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <footer class="admin-footer">
+                Aaheli's Aahar Admin Panel
+            </footer>
+
+        </main>
+
+    </div>
+
+
+    <!-- ================= ORDER DETAILS MODAL ================= -->
+
+    <div class="order-modal" id="orderModal">
+
+        <div class="order-modal-box">
+
+            <button
+                class="modal-close"
+                onclick="closeOrderModal()">
+                ×
+            </button>
+
+            <h2>Order Details</h2>
+
+            <div id="orderDetails"></div>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
