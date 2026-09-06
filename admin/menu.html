@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Aaheli's Aahar | Menu Management</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🍽️</div>
+
+            <div>
+                <h2>Aaheli's Aahar</h2>
+                <p>Admin Panel</p>
+            </div>
+        </div>
+
+        <nav class="admin-nav">
+
+            <a href="dashboard.html" class="nav-item">
+                📊
+                <span>Dashboard</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                📦
+                <span>Orders</span>
+            </a>
+
+            <a href="menu.html" class="nav-item active">
+                🍱
+                <span>Menu</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                🎉
+                <span>Special Menus</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                ⚙️
+                <span>Settings</span>
+            </a>
+
+        </nav>
+
+        <button class="logout-btn" onclick="logout()">
+            🚪 Logout
+        </button>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="topbar">
+
+            <div>
+                <h1>Menu Management</h1>
+
+                <p>
+                    Manage the food items displayed on the website.
+                </p>
+            </div>
+
+            <div class="admin-profile">
+
+                <div class="profile-icon">
+                    A
+                </div>
+
+                <div>
+                    <strong>Admin</strong>
+                    <small>Administrator</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- MENU TABS -->
+        <div class="admin-menu-tabs">
+
+            <button class="admin-menu-tab active" data-menu="lunch">
+                🍛 Lunch
+            </button>
+
+            <button class="admin-menu-tab" data-menu="canteen">
+                🍱 Office Canteen
+            </button>
+
+            <button class="admin-menu-tab" data-menu="dinner">
+                🍽️ Dinner
+            </button>
+
+        </div>
+
+
+        <!-- LUNCH -->
+        <section class="admin-menu-section active" id="lunch">
+
+            <div class="menu-section-header">
+
+                <div>
+                    <h2>Lunch Menu</h2>
+                    <p>Manage available lunch items.</p>
+                </div>
+
+                <button class="add-menu-btn">
+                    + Add Item
+                </button>
+
+            </div>
+
+
+            <div class="admin-food-list">
+
+                <div class="admin-food-card">
+
+                    <div class="food-image-placeholder">
+                        🍛
+                    </div>
+
+                    <div class="admin-food-info">
+
+                        <h3>Lunch Item</h3>
+
+                        <p>
+                            Add your lunch menu items here.
+                        </p>
+
+                        <span class="item-status active-status">
+                            ● Available
+                        </span>
+
+                    </div>
+
+                    <div class="food-actions">
+
+                        <button class="edit-btn">
+                            Edit
+                        </button>
+
+                        <button class="toggle-btn">
+                            Disable
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- OFFICE CANTEEN -->
+        <section class="admin-menu-section" id="canteen">
+
+            <div class="menu-section-header">
+
+                <div>
+                    <h2>Office Canteen</h2>
+                    <p>Weekly office meal menu.</p>
+                </div>
+
+                <button class="add-menu-btn">
+                    + Add Item
+                </button>
+
+            </div>
+
+
+            <div class="admin-food-list">
+
+                <div class="admin-food-card">
+
+                    <div class="food-image-placeholder">
+                        🍱
+                    </div>
+
+                    <div class="admin-food-info">
+
+                        <h3>Monday — Idli</h3>
+
+                        <p>
+                            4 pieces • Sambar • Chatni • Egg / Paneer
+                        </p>
+
+                        <strong class="food-price">
+                            ₹80 / plate
+                        </strong>
+
+                        <span class="item-status active-status">
+                            ● Available
+                        </span>
+
+                    </div>
+
+                    <div class="food-actions">
+
+                        <button class="edit-btn">
+                            Edit
+                        </button>
+
+                        <button class="toggle-btn">
+                            Disable
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-food-card">
+
+                    <div class="food-image-placeholder">
+                        🍚
+                    </div>
+
+                    <div class="admin-food-info">
+
+                        <h3>Tuesday — Rice & Mixed Veg</h3>
+
+                        <p>
+                            Daal • Salad • Curd
+                        </p>
+
+                        <strong class="food-price">
+                            ₹80 / plate
+                        </strong>
+
+                        <span class="item-status active-status">
+                            ● Available
+                        </span>
+
+                    </div>
+
+                    <div class="food-actions">
+
+                        <button class="edit-btn">
+                            Edit
+                        </button>
+
+                        <button class="toggle-btn">
+                            Disable
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-food-card">
+
+                    <div class="food-image-placeholder">
+                        🫓
+                    </div>
+
+                    <div class="admin-food-info">
+
+                        <h3>Wednesday — Roti</h3>
+
+                        <p>
+                            4 pieces • Mixed Veg • Egg Curry / Paneer • Salad • Curd
+                        </p>
+
+                        <strong class="food-price">
+                            ₹80 / plate
+                        </strong>
+
+                        <span class="item-status active-status">
+                            ● Available
+                        </span>
+
+                    </div>
+
+                    <div class="food-actions">
+
+                        <button class="edit-btn">
+                            Edit
+                        </button>
+
+                        <button class="toggle-btn">
+                            Disable
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-food-card">
+
+                    <div class="food-image-placeholder">
+                        🥞
+                    </div>
+
+                    <div class="admin-food-info">
+
+                        <h3>Thursday — Veg Chila</h3>
+
+                        <p>
+                            4 pieces • Salad • Paneer • Aachar • Curd
+                        </p>
+
+                        <strong class="food-price">
+                            ₹80 / plate
+                        </strong>
+
+                        <span class="item-status active-status">
+                            ● Available
+                        </span>
+
+                    </div>
+
+                    <div class="food-actions">
+
+                        <button class="edit-btn">
+                            Edit
+                        </button>
+
+                        <button class="toggle-btn">
+                            Disable
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-food-card">
+
+                    <div class="food-image-placeholder">
+                        🍜
+                    </div>
+
+                    <div class="admin-food-info">
+
+                        <h3>Thursday — Chowmin</h3>
+
+                        <p>
+                            Salad
+                        </p>
+
+                        <strong class="food-price">
+                            ₹80 / plate
+                        </strong>
+
+                        <span class="item-status active-status">
+                            ● Available
+                        </span>
+
+                    </div>
+
+                    <div class="food-actions">
+
+                        <button class="edit-btn">
+                            Edit
+                        </button>
+
+                        <button class="toggle-btn">
+                            Disable
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-food-card">
+
+                    <div class="food-image-placeholder">
+                        🍲
+                    </div>
+
+                    <div class="admin-food-info">
+
+                        <h3>Friday — Dalia Khichdi</h3>
+
+                        <p>
+                            Papor • Salad • Curd • Chatni
+                        </p>
+
+                        <strong class="food-price">
+                            ₹80 / plate
+                        </strong>
+
+                        <span class="item-status active-status">
+                            ● Available
+                        </span>
+
+                    </div>
+
+                    <div class="food-actions">
+
+                        <button class="edit-btn">
+                            Edit
+                        </button>
+
+                        <button class="toggle-btn">
+                            Disable
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-food-card">
+
+                    <div class="food-image-placeholder">
+                        🫓
+                    </div>
+
+                    <div class="admin-food-info">
+
+                        <h3>Saturday — Parota</h3>
+
+                        <p>
+                            4 pieces • Aalur Dom • Aachar
+                        </p>
+
+                        <strong class="food-price">
+                            ₹80 / plate
+                        </strong>
+
+                        <span class="item-status active-status">
+                            ● Available
+                        </span>
+
+                    </div>
+
+                    <div class="food-actions">
+
+                        <button class="edit-btn">
+                            Edit
+                        </button>
+
+                        <button class="toggle-btn">
+                            Disable
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- DINNER -->
+        <section class="admin-menu-section" id="dinner">
+
+            <div class="menu-section-header">
+
+                <div>
+                    <h2>Dinner Menu</h2>
+                    <p>Manage available dinner items.</p>
+                </div>
+
+                <button class="add-menu-btn">
+                    + Add Item
+                </button>
+
+            </div>
+
+
+            <div class="admin-food-list">
+
+                <div class="admin-food-card">
+
+                    <div class="food-image-placeholder">
+                        🍽️
+                    </div>
+
+                    <div class="admin-food-info">
+
+                        <h3>Dinner Item</h3>
+
+                        <p>
+                            Add your dinner menu items here.
+                        </p>
+
+                        <span class="item-status active-status">
+                            ● Available
+                        </span>
+
+                    </div>
+
+                    <div class="food-actions">
+
+                        <button class="edit-btn">
+                            Edit
+                        </button>
+
+                        <button class="toggle-btn">
+                            Disable
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>

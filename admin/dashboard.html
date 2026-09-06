@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Aaheli's Aahar | Admin Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <div class="brand">
+                <div class="brand-icon">🍽️</div>
+                <div>
+                    <h2>Aaheli's Aahar</h2>
+                    <p>Admin Panel</p>
+                </div>
+            </div>
+
+            <nav class="admin-nav">
+
+                <button class="nav-item active">
+                    📊
+                    <span>Dashboard</span>
+                </button>
+
+                <button class="nav-item">
+                    📦
+                    <span>Orders</span>
+                </button>
+
+                <button class="nav-item">
+                    🍱
+                    <span>Menu</span>
+                </button>
+
+                <button class="nav-item">
+                    🎉
+                    <span>Special Menus</span>
+                </button>
+
+                <button class="nav-item">
+                    ⚙️
+                    <span>Settings</span>
+                </button>
+
+            </nav>
+
+            <button class="logout-btn" onclick="logout()">
+                🚪 Logout
+            </button>
+
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Top Bar -->
+            <header class="topbar">
+
+                <div>
+                    <h1>Dashboard</h1>
+                    <p>Welcome back, Admin 👋</p>
+                </div>
+
+                <div class="admin-profile">
+                    <div class="profile-icon">A</div>
+
+                    <div>
+                        <strong>Admin</strong>
+                        <small>Administrator</small>
+                    </div>
+                </div>
+
+            </header>
+
+
+            <!-- Statistics -->
+            <section class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">📦</div>
+
+                    <div>
+                        <span>Total Orders</span>
+                        <strong>0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">💰</div>
+
+                    <div>
+                        <span>Today's Sales</span>
+                        <strong>₹0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">⏳</div>
+
+                    <div>
+                        <span>Pending Orders</span>
+                        <strong>0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">✅</div>
+
+                    <div>
+                        <span>Completed Orders</span>
+                        <strong>0</strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Dashboard Grid -->
+            <section class="dashboard-grid">
+
+
+                <!-- Recent Orders -->
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h2>Recent Orders</h2>
+                            <p>Latest customer orders</p>
+                        </div>
+
+                        <button class="view-btn">
+                            View All
+                        </button>
+
+                    </div>
+
+
+                    <div class="empty-state">
+
+                        <div class="empty-icon">📦</div>
+
+                        <h3>No orders yet</h3>
+
+                        <p>
+                            Customer orders will appear here
+                            once online ordering is connected.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Quick Actions -->
+                <div class="dashboard-card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <h2>Quick Actions</h2>
+                            <p>Manage your business</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="quick-actions">
+
+                        <button>
+                            <span>🍱</span>
+                            <div>
+                                <strong>Manage Menu</strong>
+                                <small>Add or edit food items</small>
+                            </div>
+                        </button>
+
+
+                        <button>
+                            <span>🎉</span>
+                            <div>
+                                <strong>Special Menu</strong>
+                                <small>Create an occasion menu</small>
+                            </div>
+                        </button>
+
+
+                        <button>
+                            <span>⚙️</span>
+                            <div>
+                                <strong>Business Settings</strong>
+                                <small>Update business information</small>
+                            </div>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- Business Status -->
+            <section class="dashboard-card status-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <h2>Business Status</h2>
+                        <p>Current website status</p>
+                    </div>
+
+                    <span class="status-active">
+                        ● Website Active
+                    </span>
+
+                </div>
+
+
+                <div class="status-info">
+
+                    <div>
+                        <span>Delivery</span>
+                        <strong>Available</strong>
+                    </div>
+
+                    <div>
+                        <span>Pre-order</span>
+                        <strong>1–2 Days Before</strong>
+                    </div>
+
+                    <div>
+                        <span>Office Canteen</span>
+                        <strong>₹80 / Plate</strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <footer class="admin-footer">
+                Aaheli's Aahar • Admin Panel
+            </footer>
+
+        </main>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>

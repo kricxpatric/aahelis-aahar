@@ -1,0 +1,902 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f1e6;
+    color: #292929;
+}
+
+/* Login Page */
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Login Card */
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    padding: 45px 40px;
+    border-radius: 22px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* Logo */
+
+.logo-area {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.logo-circle {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #263d25;
+    color: white;
+
+    border-radius: 50%;
+
+    font-size: 32px;
+}
+
+.logo-area h1 {
+    font-family: Georgia, serif;
+    color: #263d25;
+    font-size: 28px;
+    margin-bottom: 7px;
+}
+
+.logo-area p {
+    color: #777;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* Input */
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #444;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 15px;
+
+    border: 1px solid #ddd6c7;
+    border-radius: 10px;
+
+    font-size: 15px;
+    outline: none;
+
+    background: #faf9f5;
+
+    transition: 0.2s;
+}
+
+.input-group input:focus {
+    border-color: #263d25;
+    background: #ffffff;
+}
+
+/* Login Button */
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #263d25;
+    color: white;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.login-btn:hover {
+    opacity: 0.9;
+}
+
+/* Message */
+
+#loginMessage {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+/* Footer */
+
+.login-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+
+    border-top: 1px solid #eee;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+}
+
+.login-footer p {
+    color: #888;
+    font-size: 12px;
+}
+
+/* Mobile */
+
+@media (max-width: 500px) {
+
+    .login-card {
+        padding: 35px 25px;
+    }
+
+    .logo-area h1 {
+        font-size: 25px;
+    }
+
+}
+
+/* =================================
+   ADMIN DASHBOARD
+   ================================= */
+
+.admin-layout {
+    min-height: 100vh;
+    display: flex;
+    background: #f5f1e6;
+}
+
+/* Sidebar */
+
+.sidebar {
+    width: 250px;
+    background: #263d25;
+    color: white;
+    padding: 28px 18px;
+
+    display: flex;
+    flex-direction: column;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 5px 10px 30px;
+
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.brand-icon {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255,255,255,0.12);
+    border-radius: 12px;
+
+    font-size: 23px;
+}
+
+.brand h2 {
+    font-family: Georgia, serif;
+    font-size: 17px;
+}
+
+.brand p {
+    margin-top: 4px;
+    font-size: 11px;
+    opacity: 0.65;
+}
+
+/* Navigation */
+
+.admin-nav {
+    margin-top: 25px;
+}
+
+.nav-item {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    padding: 13px 14px;
+    margin-bottom: 6px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: transparent;
+    color: white;
+
+    text-align: left;
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: rgba(255,255,255,0.12);
+}
+
+.logout-btn {
+    margin-top: auto;
+
+    padding: 13px;
+
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+
+    background: transparent;
+    color: white;
+
+    cursor: pointer;
+}
+
+/* Main */
+
+.main-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+
+    padding: 35px 45px;
+}
+
+/* Topbar */
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 35px;
+}
+
+.topbar h1 {
+    font-family: Georgia, serif;
+    font-size: 36px;
+    color: #263d25;
+}
+
+.topbar p {
+    margin-top: 6px;
+    color: #777;
+}
+
+.admin-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #b45c32;
+    color: white;
+
+    border-radius: 50%;
+
+    font-weight: bold;
+}
+
+.admin-profile small {
+    display: block;
+    color: #888;
+    margin-top: 3px;
+}
+
+/* Statistics */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    border: 1px solid #e3ded3;
+
+    border-radius: 16px;
+
+    padding: 22px;
+
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f5f1e6;
+    border-radius: 12px;
+
+    font-size: 22px;
+}
+
+.stat-card span {
+    display: block;
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.stat-card strong {
+    color: #263d25;
+    font-size: 25px;
+}
+
+/* Dashboard Grid */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 22px;
+
+    margin-bottom: 22px;
+}
+
+.dashboard-card {
+    background: white;
+
+    border: 1px solid #e3ded3;
+    border-radius: 18px;
+
+    padding: 25px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    margin-bottom: 20px;
+}
+
+.card-header h2 {
+    font-family: Georgia, serif;
+    color: #263d25;
+    font-size: 22px;
+}
+
+.card-header p {
+    color: #888;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.view-btn {
+    border: none;
+    background: transparent;
+    color: #b45c32;
+
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Empty State */
+
+.empty-state {
+    text-align: center;
+    padding: 45px 20px;
+}
+
+.empty-icon {
+    font-size: 38px;
+    margin-bottom: 12px;
+}
+
+.empty-state h3 {
+    color: #444;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: #888;
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 350px;
+    margin: auto;
+}
+
+/* Quick Actions */
+
+.quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.quick-actions button {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    width: 100%;
+
+    padding: 14px;
+
+    border: 1px solid #e5e0d5;
+    border-radius: 12px;
+
+    background: #faf9f5;
+
+    text-align: left;
+    cursor: pointer;
+}
+
+.quick-actions button:hover {
+    background: #f5f1e6;
+}
+
+.quick-actions span {
+    font-size: 22px;
+}
+
+.quick-actions strong {
+    display: block;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.quick-actions small {
+    color: #888;
+}
+
+/* Status */
+
+.status-card {
+    margin-bottom: 25px;
+}
+
+.status-active {
+    color: #3d7541;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.status-info div {
+    background: #faf9f5;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.status-info span {
+    display: block;
+    color: #888;
+    font-size: 12px;
+    margin-bottom: 7px;
+}
+
+.status-info strong {
+    color: #333;
+    font-size: 15px;
+}
+
+/* Footer */
+
+.admin-footer {
+    text-align: center;
+    color: #999;
+    font-size: 12px;
+    padding: 15px;
+}
+
+
+/* =================================
+   MOBILE
+   ================================= */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+        width: 210px;
+    }
+
+    .main-content {
+        margin-left: 210px;
+        width: calc(100% - 210px);
+        padding: 25px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .admin-layout {
+        display: block;
+    }
+
+    .sidebar {
+        position: static;
+        width: 100%;
+        padding: 15px;
+
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .brand {
+        border: none;
+        padding: 0;
+    }
+
+    .brand h2 {
+        font-size: 15px;
+    }
+
+    .brand p {
+        display: none;
+    }
+
+    .admin-nav {
+        display: none;
+    }
+
+    .logout-btn {
+        margin-left: auto;
+        margin-top: 0;
+
+        padding: 9px 12px;
+        font-size: 12px;
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 22px 16px;
+    }
+
+    .topbar {
+        margin-bottom: 25px;
+    }
+
+    .topbar h1 {
+        font-size: 29px;
+    }
+
+    .admin-profile {
+        display: none;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .stat-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+    }
+
+    .stat-card strong {
+        font-size: 20px;
+    }
+
+    .stat-card span {
+        font-size: 11px;
+    }
+
+    .dashboard-card {
+        padding: 20px;
+    }
+
+    .status-info {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =================================
+   MENU MANAGEMENT
+   ================================= */
+
+.admin-menu-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.admin-menu-tab {
+    border: 1px solid #ddd6c7;
+    background: white;
+    color: #555;
+
+    padding: 12px 20px;
+    border-radius: 10px;
+
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.admin-menu-tab:hover {
+    background: #f5f1e6;
+}
+
+.admin-menu-tab.active {
+    background: #263d25;
+    color: white;
+    border-color: #263d25;
+}
+
+.admin-menu-section {
+    display: none;
+}
+
+.admin-menu-section.active {
+    display: block;
+}
+
+.menu-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.menu-section-header h2 {
+    font-family: Georgia, serif;
+    color: #263d25;
+    font-size: 26px;
+}
+
+.menu-section-header p {
+    color: #888;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.add-menu-btn {
+    border: none;
+    background: #b45c32;
+    color: white;
+
+    padding: 12px 18px;
+    border-radius: 10px;
+
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.add-menu-btn:hover {
+    opacity: 0.9;
+}
+
+.admin-food-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-food-card {
+    background: white;
+    border: 1px solid #e3ded3;
+    border-radius: 16px;
+
+    padding: 18px;
+
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.food-image-placeholder {
+    width: 75px;
+    height: 75px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f5f1e6;
+    border-radius: 14px;
+
+    font-size: 30px;
+}
+
+.admin-food-info {
+    flex: 1;
+}
+
+.admin-food-info h3 {
+    color: #333;
+    font-size: 17px;
+    margin-bottom: 6px;
+}
+
+.admin-food-info p {
+    color: #777;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 6px;
+}
+
+.food-price {
+    display: block;
+    color: #b45c32;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.item-status {
+    font-size: 12px;
+}
+
+.active-status {
+    color: #3d7541;
+}
+
+.food-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-btn,
+.toggle-btn {
+    padding: 9px 13px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.edit-btn {
+    border: 1px solid #ddd6c7;
+    background: #faf9f5;
+    color: #444;
+}
+
+.toggle-btn {
+    border: 1px solid #ddd6c7;
+    background: white;
+    color: #b45c32;
+}
+
+
+/* =================================
+   MENU MOBILE
+   ================================= */
+
+@media (max-width: 600px) {
+
+    .admin-menu-tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .admin-menu-tab {
+        padding: 11px 8px;
+        font-size: 12px;
+    }
+
+    .menu-section-header {
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .menu-section-header h2 {
+        font-size: 23px;
+    }
+
+    .menu-section-header p {
+        font-size: 12px;
+    }
+
+    .add-menu-btn {
+        padding: 10px 12px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .admin-food-card {
+        padding: 14px;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .food-image-placeholder {
+        width: 55px;
+        height: 55px;
+        font-size: 23px;
+    }
+
+    .admin-food-info h3 {
+        font-size: 14px;
+    }
+
+    .admin-food-info p {
+        font-size: 12px;
+    }
+
+    .food-actions {
+        display: none;
+    }
+
+    .food-price {
+        font-size: 13px;
+    }
+}
