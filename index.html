@@ -798,43 +798,60 @@
                             </div>
 
 
-                            <!-- ORDER ITEMS -->
+                            <!-- ================= CART ================= -->
 
-                            <div class="order-form-group">
+<div class="customer-cart">
 
-                                <label for="orderItems">
-                                    Order Items
-                                </label>
+    <div class="cart-heading">
 
-                                <textarea
-                                    id="orderItems"
-                                    name="orderItems"
-                                    placeholder="Example: Veg Thali x 2, Chicken x 1"
-                                    rows="4"
-                                    required
-                                ></textarea>
+        <h4>
+            🛒 Your Cart
+        </h4>
 
-                            </div>
+        <span>
+            <span id="cartCount">0</span> items
+        </span>
+
+    </div>
 
 
-                            <!-- TOTAL -->
+    <div id="cartItems">
 
-                            <div class="order-form-group">
+        <div class="empty-cart">
+            🛒 Your cart is empty.
+            <br>
+            Add something delicious from the menu!
+        </div>
 
-                                <label for="orderTotal">
-                                    Total Amount (₹)
-                                </label>
+    </div>
 
-                                <input
-                                    type="number"
-                                    id="orderTotal"
-                                    name="orderTotal"
-                                    placeholder="Enter total amount"
-                                    min="0"
-                                    required
-                                >
 
-                            </div>
+    <div class="cart-total-row">
+
+        <span>
+            Total
+        </span>
+
+        <strong id="cartTotal">
+            ₹0
+        </strong>
+
+    </div>
+
+</div>
+
+
+<!-- Hidden fields used when sending order to backend -->
+
+<input
+    type="hidden"
+    id="orderItems"
+>
+
+<input
+    type="hidden"
+    id="orderTotal"
+>
 
 
                             <!-- SUBMIT -->
