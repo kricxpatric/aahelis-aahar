@@ -367,6 +367,34 @@ function updateCart() {
         hiddenTotal.value = total;
     }
 
+    if (hiddenTotal) {
+    hiddenTotal.value = total;
+    }
+
+
+    // Update floating cart
+    const floatingCartCount = document.getElementById("floatingCartCount");
+    const floatingCartTotal = document.getElementById("floatingCartTotal");
+    const floatingCartButton = document.getElementById("floatingCartButton");
+
+    const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    if (floatingCartCount) {
+        floatingCartCount.textContent = totalQuantity;
+    }
+
+    if (floatingCartTotal) {
+        floatingCartTotal.textContent = totalPrice;
+    }
+
+    if (floatingCartButton) {
+        if (cart.length === 0) {
+            floatingCartButton.classList.add("empty");
+        } else {
+            floatingCartButton.classList.remove("empty");
+        }
+    }
 }
 
 
@@ -410,71 +438,143 @@ function renderPublicMenu(items) {
         document.getElementById("publicDinnerList");
 
 
-    /* =========================
-       LUNCH
-    ========================= */
+/* =========================
+   LUNCH
+========================= */
 
-    if (lunchList) {
+if (lunchList) {
 
-        if (!lunchItems.length) {
+    if (!lunchItems.length) {
 
-            lunchList.innerHTML = `
-                <span>
-                    Lunch menu currently unavailable.
-                </span>
-            `;
+        lunchList.innerHTML = `
+            <span>
+                Lunch menu currently unavailable.
+            </span>
+        `;
 
-        } else {
+    } else {
 
-            lunchList.innerHTML =
-                lunchItems.map(function(item) {
+        /* FIRST ITEM = MAIN LUNCH / VEG THALI */
+        const mainLunchItem = lunchItems[0];
 
-                    return `
-                        <div class="public-menu-item">
+        /* REMAINING ITEMS = ADD-ONS */
+        const lunchAddons = lunchItems.slice(1);
 
-                            <div class="public-menu-info">
+        lunchList.innerHTML = `
 
-                                <strong>
-                                    ${escapePublicHTML(item.name)}
-                                </strong>
+            <!-- MAIN LUNCH ITEM -->
+            <div class="lunch-main-item">
 
-                                ${
-                                    item.description
-                                    ? `
-                                        <small>
-                                            ${escapePublicHTML(item.description)}
-                                        </small>
-                                      `
-                                    : ""
-                                }
+                <div class="public-menu-info">
 
-                                <span class="menu-price">
-                                    ₹${Number(item.price).toFixed(0)}
-                                </span>
+                    <strong>
+                        ${escapePublicHTML(mainLunchItem.name)}
+                    </strong>
 
-                            </div>
+                    ${
+                        mainLunchItem.description
+                        ? `
+                            <small>
+                                ${escapePublicHTML(mainLunchItem.description)}
+                            </small>
+                          `
+                        : ""
+                    }
+
+                    <span class="menu-price">
+                        ₹${Number(mainLunchItem.price).toFixed(0)}
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="add-cart-btn"
+                    onclick="addToCart(
+                        ${mainLunchItem.id},
+                        '${escapePublicHTML(mainLunchItem.name).replace(/'/g, "\\'")}',
+                        ${Number(mainLunchItem.price)}
+                    )"
+                >
+                    + Add to Cart
+                </button>
+
+            </div>
 
 
-                            <button
-                                type="button"
-                                class="add-cart-btn"
-                                onclick="addToCart(
-                                    ${item.id},
-                                    '${escapePublicHTML(item.name).replace(/'/g, "\\'")}',
-                                    ${Number(item.price)}
-                                )"
-                            >
-                                + Add to Cart
-                            </button>
+            <!-- LUNCH ADD-ONS -->
+            ${
+                lunchAddons.length
+                ? `
+                    <div class="lunch-addons-section">
+
+                        <p class="lunch-addons-title">
+                            এর সাথে চাইলে নিতে পারেন
+                            <span>(you can add on)</span>
+                        </p>
+
+                        <div class="lunch-addons-list">
+
+                            ${
+                                lunchAddons.map(function(item) {
+
+                                    return `
+
+                                        <div class="lunch-addon-item">
+
+                                            <div class="public-menu-info">
+
+                                                <strong>
+                                                    ${escapePublicHTML(item.name)}
+                                                </strong>
+
+                                                ${
+                                                    item.description
+                                                    ? `
+                                                        <small>
+                                                            ${escapePublicHTML(item.description)}
+                                                        </small>
+                                                      `
+                                                    : ""
+                                                }
+
+                                                <span class="menu-price">
+                                                    ₹${Number(item.price).toFixed(0)}
+                                                </span>
+
+                                            </div>
+
+                                            <button
+                                                type="button"
+                                                class="add-cart-btn"
+                                                onclick="addToCart(
+                                                    ${item.id},
+                                                    '${escapePublicHTML(item.name).replace(/'/g, "\\'")}',
+                                                    ${Number(item.price)}
+                                                )"
+                                            >
+                                                + Add to Cart
+                                            </button>
+
+                                        </div>
+
+                                    `;
+
+                                }).join("")
+                            }
 
                         </div>
-                    `;
 
-                }).join("");
+                    </div>
+                  `
+                : ""
+            }
 
-        }
+        `;
 
     }
+
+}
 
 
     /* =========================
@@ -960,11 +1060,14 @@ if (customerOrderForm) {
                 }
 
 
-                message.textContent =
-                    "Order placed successfully! We will contact you shortly.";
+               message.textContent =
+                            "✅ Order Placed Successfully! Thank you for ordering from Aaheli'R Aahar ❤️ We'll contact you shortly to confirm your order.";
 
-                message.style.color =
-                    "#386536";
+                message.classList.add("success");
+                setTimeout(function () {
+                    message.textContent = "";
+                    message.classList.remove("success");
+                }, 8000);
 
 
                 customerOrderForm.reset();
@@ -998,4 +1101,15 @@ if (customerOrderForm) {
         }
     );
 
+}
+
+function scrollToCart() {
+    const cartSection = document.getElementById("customer-cart");
+
+    if (cartSection) {
+        cartSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
 }
