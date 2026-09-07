@@ -1,12 +1,15 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, session
 import os
 from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 import sqlite3
-import os
 
 app = Flask(__name__)
-CORS(app)
+
+app.secret_key = "aahelis-aahar-local-secret-key"
+
+CORS(app, supports_credentials=True)
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "special_menus")
 
@@ -84,6 +87,31 @@ def create_database():
         INSERT OR IGNORE INTO settings (id)
         VALUES (1)
     """)
+
+    # =========================================
+    # CONVERT OLD PLAIN PASSWORD TO HASH
+    # =========================================
+
+    settings_row = connection.execute("""
+        SELECT admin_password
+        FROM settings
+        WHERE id = 1
+    """).fetchone()
+
+    if settings_row:
+        current_password = settings_row["admin_password"]
+
+        if current_password and not (
+            current_password.startswith("scrypt:")
+            or current_password.startswith("pbkdf2:")
+        ):
+            hashed_password = generate_password_hash(current_password)
+
+            connection.execute("""
+                UPDATE settings
+                SET admin_password = ?
+                WHERE id = 1
+            """, (hashed_password,))
 
     connection.commit()
     connection.close()
@@ -941,6 +969,104 @@ def update_admin_account():
 
     return jsonify({
         "message": "Admin account updated successfully"
+    })
+
+# =========================================
+# ADMIN AUTHENTICATION
+# =========================================
+
+@app.route("/api/login", methods=["POST"])
+def admin_login():
+
+    data = request.get_json()
+
+    if not data:
+        return jsonify({
+            "error": "No login data received"
+        }), 400
+
+    username = data.get("username", "").strip()
+    password = data.get("password", "")
+
+    if not username or not password:
+        return jsonify({
+            "error": "Username and password are required"
+        }), 400
+
+    connection = get_db()
+
+    settings = connection.execute("""
+        SELECT admin_username, admin_password
+        FROM settings
+        WHERE id = 1
+    """).fetchone()
+
+    connection.close()
+
+    if not settings:
+        return jsonify({
+            "error": "Admin account not found"
+        }), 500
+
+    stored_username = settings["admin_username"]
+    stored_password = settings["admin_password"]
+
+    if username != stored_username:
+        return jsonify({
+            "error": "Invalid username or password"
+        }), 401
+
+    try:
+        password_valid = check_password_hash(
+            stored_password,
+            password
+        )
+    except ValueError:
+        password_valid = False
+
+    if not password_valid:
+        return jsonify({
+            "error": "Invalid username or password"
+        }), 401
+
+    session["admin_logged_in"] = True
+    session["admin_username"] = stored_username
+
+    return jsonify({
+        "message": "Login successful",
+        "username": stored_username
+    })
+
+
+# =========================================
+# ADMIN LOGOUT
+# =========================================
+
+@app.route("/api/logout", methods=["POST"])
+def admin_logout():
+
+    session.clear()
+
+    return jsonify({
+        "message": "Logged out successfully"
+    })
+
+
+# =========================================
+# CHECK LOGIN STATUS
+# =========================================
+
+@app.route("/api/auth/status", methods=["GET"])
+def auth_status():
+
+    if session.get("admin_logged_in"):
+        return jsonify({
+            "authenticated": True,
+            "username": session.get("admin_username")
+        })
+
+    return jsonify({
+        "authenticated": False
     })
 
 # ================================

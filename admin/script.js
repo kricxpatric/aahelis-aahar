@@ -11,33 +11,89 @@ const API_URL = `http://${window.location.hostname}:5000/api/menu`;
 // ADMIN LOGIN
 // ========================================
 
+const AUTH_API_URL =
+    `http://${window.location.hostname}:5000/api`;
+
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
 
-    const loginMessage = document.getElementById("loginMessage");
+    const loginMessage =
+        document.getElementById("loginMessage");
 
-    loginForm.addEventListener("submit", function (event) {
+    loginForm.addEventListener("submit", async function (event) {
 
         event.preventDefault();
 
-        const username = document.getElementById("username").value.trim();
-        const password = document.getElementById("password").value;
+        const username =
+            document.getElementById("username").value.trim();
 
-        if (username === "admin" && password === "admin123") {
+        const password =
+            document.getElementById("password").value;
 
-            loginMessage.textContent = "Login successful!";
-            loginMessage.style.color = "green";
+        loginMessage.textContent = "Logging in...";
+        loginMessage.style.color = "#777";
+
+        try {
+
+            const response = await fetch(
+                `${AUTH_API_URL}/login`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    credentials: "include",
+
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                }
+            );
+
+            const result =
+                await response.json();
+
+            if (!response.ok) {
+
+                loginMessage.textContent =
+                    result.error ||
+                    "Invalid username or password.";
+
+                loginMessage.style.color =
+                    "#b45c32";
+
+                return;
+            }
+
+            loginMessage.textContent =
+                "Login successful!";
+
+            loginMessage.style.color =
+                "green";
 
             setTimeout(function () {
-                window.location.href = "dashboard.html";
+
+                window.location.href =
+                    "dashboard.html";
+
             }, 500);
 
-        } else {
+        } catch (error) {
 
-            loginMessage.textContent = "Invalid username or password.";
-            loginMessage.style.color = "#b45c32";
+            console.error(
+                "LOGIN ERROR:",
+                error
+            );
 
+            loginMessage.textContent =
+                "Could not connect to the backend.";
+
+            loginMessage.style.color =
+                "#b45c32";
         }
 
     });
@@ -48,7 +104,27 @@ if (loginForm) {
 // LOGOUT
 // ========================================
 
-function logout() {
+async function logout() {
+
+    try {
+
+        await fetch(
+            `${AUTH_API_URL}/logout`,
+            {
+                method: "POST",
+                credentials: "include"
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "LOGOUT ERROR:",
+            error
+        );
+
+    }
+
     window.location.href = "index.html";
 }
 
