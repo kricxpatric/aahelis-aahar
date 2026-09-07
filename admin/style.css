@@ -2381,3 +2381,29 @@ body {
 
 }
 
+/* =========================================
+   CUSTOMER ORDER SECTION
+========================================= */
+
+.customer-order-section {
+    display: block !important;
+    width: 100%;
+    max-width: 1000px;
+    margin: 40px auto 0;
+    padding: 0 5%;
+    box-sizing: border-box;
+}
+
+.customer-order-section .order-box {
+    display: block !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+    .customer-order-section {
+        padding: 0 18px;
+        margin-top: 30px;
+    }
+}
+
