@@ -20,7 +20,7 @@ The website gives customers an easy way to:
 - View weekly Office Canteen meals
 - Check special occasion menus
 - Learn about the business
-- Contact Aaheli's Aahar for orders
+- Contact Aaheli'R Aahar for orders
 - View food and menu information
 
 ---
@@ -97,7 +97,7 @@ Aaheli'R Aahar can be expanded with more features as the business grows.
 - 📈 **Sales & Analytics** — Track orders, popular dishes, and overall sales.
 - 🤖 **Smart Recommendations** — Suggest popular or suitable dishes to customers based on availability and previous orders.
 
-These features can be introduced gradually as Aaheli's Aahar grows from a simple food delivery website into a complete online food-ordering platform.
+These features can be introduced gradually as Aaheli'R Aahar grows from a simple food delivery website into a complete online food-ordering platform.
 
 ---
 
