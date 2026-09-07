@@ -1,10 +1,10 @@
 # Aaheli'R Aahar
-# 🍽️ Aaheli's Aahar
+# 🍽️ Aaheli'R Aahar
 
 > **ভালোবাসা দিয়ে রান্না, ঘরের স্বাদে পরিবেশন**  
 > *Cooked with love, served with the taste of home.*
 
-Aaheli's Aahar is a simple, elegant, and mobile-friendly food delivery website created for a homemade food business.
+Aaheli'R Aahar is a simple, elegant, and mobile-friendly food delivery website created for a homemade food business.
 
 The website presents the brand, available food menus, office canteen meals, special occasion menus, and contact information in a clean Bengali-inspired design.
 
@@ -12,7 +12,7 @@ The website presents the brand, available food menus, office canteen meals, spec
 
 ## 🌿 About the Project
 
-Aaheli's Aahar focuses on providing wholesome, homemade meals with the warmth and authenticity of traditional home cooking.
+Aaheli'R Aahar focuses on providing wholesome, homemade meals with the warmth and authenticity of traditional home cooking.
 
 The website gives customers an easy way to:
 
@@ -40,7 +40,7 @@ The website gives customers an easy way to:
 - Contact information
 - Delivery information
 
-### 🍱 Aaheli-er Aahar
+### 🍱 Aaheli'R Aahar
 
 The food section contains three menu categories:
 
@@ -81,7 +81,7 @@ The website is designed to work on:
 
 ## 🔮 Future Ideas
 
-Aaheli's Aahar can be expanded with more features as the business grows.
+Aaheli'R Aahar can be expanded with more features as the business grows.
 
 - 🛒 **Online Ordering** — Allow customers to select food items, quantities, and place orders directly through the website.
 - 📲 **WhatsApp Ordering** — Add an option to send the selected order directly through WhatsApp.
