@@ -1,11 +1,29 @@
 // ========================================
+// SEND LOGIN SESSION WITH ADMIN API REQUESTS
+// ========================================
+
+const originalFetch = window.fetch.bind(window);
+
+window.fetch = function (url, options = {}) {
+
+    if (
+        typeof url === "string" &&
+        url.includes(":5000/api/")
+    ) {
+        options.credentials = "include";
+    }
+
+    return originalFetch(url, options);
+};
+
+// ========================================
 // AAHELI'S AAHAR - ADMIN SCRIPT
 // ========================================
 
 // Automatically use the laptop's IP address
 // when the website is opened through Live Server.
-const API_URL = `http://${window.location.hostname}:5000/api/menu`;
 
+const API_URL = `http://${window.location.hostname}:5000/api/menu`;
 
 // ========================================
 // ADMIN LOGIN
@@ -13,6 +31,59 @@ const API_URL = `http://${window.location.hostname}:5000/api/menu`;
 
 const AUTH_API_URL =
     `http://${window.location.hostname}:5000/api`;
+
+// ========================================
+// AUTHENTICATED ADMIN FETCH
+// ========================================
+
+async function adminFetch(url, options = {}) {
+
+    options.credentials = "include";
+
+    return fetch(url, options);
+}
+
+// ========================================
+// CHECK ADMIN LOGIN
+// ========================================
+
+async function checkAdminAuth() {
+
+    // Do not check the login page
+    if (window.location.pathname.endsWith("/admin/index.html")) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `${AUTH_API_URL}/auth/status`,
+            {
+                method: "GET",
+                credentials: "include"
+            }
+        );
+
+        const result = await response.json();
+
+        if (!result.authenticated) {
+
+            window.location.href = "index.html";
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "AUTH CHECK ERROR:",
+            error
+        );
+
+        window.location.href = "index.html";
+    }
+}
+
+checkAdminAuth();
 
 const loginForm = document.getElementById("loginForm");
 
@@ -36,7 +107,7 @@ if (loginForm) {
 
         try {
 
-            const response = await fetch(
+            const response = await adminFetch(
                 `${AUTH_API_URL}/login`,
                 {
                     method: "POST",
@@ -108,7 +179,7 @@ async function logout() {
 
     try {
 
-        await fetch(
+        await adminFetch(
             `${AUTH_API_URL}/logout`,
             {
                 method: "POST",
@@ -171,7 +242,7 @@ async function loadMenu() {
 
     try {
 
-        const response = await fetch(API_URL);
+        const response = await adminFetch(API_URL);
 
         if (!response.ok) {
             throw new Error("Could not load menu.");

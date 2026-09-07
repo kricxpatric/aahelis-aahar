@@ -2087,3 +2087,297 @@ body {
     }
 }
 
+/* ========================================
+   DASHBOARD QUICK ACTIONS FIX
+======================================== */
+
+.quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.quick-actions button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    padding: 16px 18px;
+
+    border: 1px solid #e5e0d5;
+    border-radius: 14px;
+
+    background: #f7f3e9;
+    color: #263d25;
+
+    text-align: left;
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.quick-actions button:hover {
+    background: #eee8da;
+    transform: translateY(-1px);
+}
+
+.quick-actions button > span {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    background: #ffffff;
+    border-radius: 12px;
+
+    font-size: 22px;
+}
+
+.quick-actions button > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.quick-actions button strong {
+    display: block;
+
+    color: #263d25;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.quick-actions button small {
+    display: block;
+
+    color: #777;
+    font-size: 12px;
+}
+
+
+/* ========================================
+   DASHBOARD GRID
+======================================== */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 25px;
+    align-items: start;
+}
+
+.dashboard-card {
+    background: #ffffff;
+    border: 1px solid #e5e0d5;
+    border-radius: 20px;
+    padding: 25px;
+
+    box-sizing: border-box;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
+}
+
+.dashboard-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.dashboard-card .card-header h2 {
+    margin: 0 0 6px;
+
+    font-family: Georgia, serif;
+    font-size: 23px;
+    color: #263d25;
+}
+
+.dashboard-card .card-header p {
+    margin: 0;
+
+    color: #777;
+    font-size: 13px;
+}
+
+
+/* ========================================
+   RECENT ORDERS
+======================================== */
+
+.recent-orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.recent-order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+
+    padding: 14px 15px;
+
+    background: #f7f3e9;
+    border-radius: 12px;
+}
+
+.recent-order-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.recent-order-info strong {
+    color: #263d25;
+    font-size: 14px;
+}
+
+.recent-order-info span {
+    color: #444;
+    font-size: 13px;
+}
+
+.recent-order-info small {
+    color: #999;
+    font-size: 11px;
+}
+
+.recent-order-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.recent-order-total {
+    color: #b45c32;
+    font-size: 15px;
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 800px) {
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .dashboard-card {
+        padding: 20px;
+        border-radius: 16px;
+    }
+
+    .quick-actions button {
+        padding: 14px;
+    }
+
+    .quick-actions button > span {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
+}
+/* ========================================
+   FINAL QUICK ACTIONS POSITION FIX
+======================================== */
+
+.dashboard-grid {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dashboard-grid > .dashboard-card {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.dashboard-grid .quick-actions {
+    width: 100%;
+    max-width: 100%;
+    margin: 20px 0 0 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    position: static;
+    transform: none;
+}
+
+.dashboard-grid .quick-actions button {
+    position: static;
+    left: auto;
+    right: auto;
+
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+
+    box-sizing: border-box;
+}
+
+/* ========================================
+   DASHBOARD GRID - CLEAN LAYOUT
+======================================== */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 22px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dashboard-grid > .dashboard-card {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.recent-orders-card,
+.quick-actions-card {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+/* QUICK ACTIONS */
+
+.quick-actions-card .quick-actions {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.quick-actions-card .quick-actions button {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+

@@ -137,83 +137,95 @@
 
 
             <!-- Dashboard Grid -->
-            <section class="dashboard-grid">
+<section class="dashboard-grid">
+
+    <!-- Recent Orders -->
+    <div class="dashboard-card recent-orders-card">
+
+        <div class="card-header">
+            <div>
+                <h2>Recent Orders</h2>
+                <p>Latest customer orders</p>
+            </div>
+
+            <button
+                class="view-btn"
+                onclick="window.location.href='orders.html'">
+                View All
+            </button>
+        </div>
+
+        <div
+            id="recentOrdersList"
+            class="recent-orders-list">
+
+            <div class="orders-loading">
+                Loading recent orders...
+            </div>
+
+        </div>
+
+    </div>
 
 
-                <!-- Recent Orders -->
-                <div class="dashboard-card">
+    <!-- Quick Actions -->
+    <div class="dashboard-card quick-actions-card">
 
-                    <div class="card-header">
+        <div class="card-header">
+            <div>
+                <h2>Quick Actions</h2>
+                <p>Manage your business</p>
+            </div>
+        </div>
 
-                        <div>
-                            <h2>Recent Orders</h2>
-                            <p>Latest customer orders</p>
-                        </div>
+        <div class="quick-actions">
 
-                        <button class="view-btn" onclick="window.location.href='orders.html'">
-                            View All
-                        </button>
+            <button
+                type="button"
+                onclick="window.location.href='menu.html'">
 
-                    </div>
+                <span>🍱</span>
 
-
-                    <div id="recentOrdersList" class="recent-orders-list">
-                        <div class="orders-loading">
-                            Loading recent orders...
-                        </div>
-                    </div>
+                <div>
+                    <strong>Manage Menu</strong>
+                    <small>Add or edit food items</small>
                 </div>
 
+            </button>
+
+
+            <button
+                type="button"
+                onclick="window.location.href='special-menus.html'">
+
+                <span>🎉</span>
+
+                <div>
+                    <strong>Special Menu</strong>
+                    <small>Create an occasion menu</small>
                 </div>
 
-
-                <!-- Quick Actions -->
-                <div class="dashboard-card">
-
-                    <div class="card-header">
-
-                        <div>
-                            <h2>Quick Actions</h2>
-                            <p>Manage your business</p>
-                        </div>
-
-                    </div>
+            </button>
 
 
-                    <div class="quick-actions">
+            <button
+                type="button"
+                onclick="window.location.href='settings.html'">
 
-                        <button>
-                            <span>🍱</span>
-                            <div>
-                                <strong>Manage Menu</strong>
-                                <small>Add or edit food items</small>
-                            </div>
-                        </button>
+                <span>⚙️</span>
 
-
-                        <button>
-                            <span>🎉</span>
-                            <div>
-                                <strong>Special Menu</strong>
-                                <small>Create an occasion menu</small>
-                            </div>
-                        </button>
-
-
-                        <button>
-                            <span>⚙️</span>
-                            <div>
-                                <strong>Business Settings</strong>
-                                <small>Update business information</small>
-                            </div>
-                        </button>
-
-                    </div>
-
+                <div>
+                    <strong>Business Settings</strong>
+                    <small>Update business information</small>
                 </div>
 
-            </section>
+            </button>
 
+        </div>
+
+    </div>
+
+</section>
 
             <!-- Business Status -->
             <section class="dashboard-card status-card">

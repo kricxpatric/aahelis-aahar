@@ -980,6 +980,8 @@ def update_admin_account():
 
     if password:
 
+        hashed_password = generate_password_hash(password)
+
         connection.execute("""
             UPDATE settings
             SET
@@ -987,9 +989,9 @@ def update_admin_account():
                 admin_password = ?
             WHERE id = 1
         """, (
-            username,
-            password
-        ))
+        username,
+        hashed_password
+    ))
 
     else:
 
