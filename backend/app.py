@@ -4,12 +4,31 @@ from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 import sqlite3
+from functools import wraps
 
 app = Flask(__name__)
 
 app.secret_key = "aahelis-aahar-local-secret-key"
 
 CORS(app, supports_credentials=True)
+
+# =========================================
+# ADMIN AUTHENTICATION
+# =========================================
+
+def admin_required(function):
+
+    @wraps(function)
+    def wrapper(*args, **kwargs):
+
+        if not session.get("admin_logged_in"):
+            return jsonify({
+                "error": "Unauthorized. Please login first."
+            }), 401
+
+        return function(*args, **kwargs)
+
+    return wrapper
 
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "special_menus")
 
@@ -141,6 +160,7 @@ def get_menu():
 # ================================
 
 @app.route("/api/menu", methods=["POST"])
+@admin_required
 def add_menu():
 
     data = request.get_json()
@@ -192,6 +212,7 @@ def add_menu():
 # ================================
 
 @app.route("/api/menu/<int:item_id>", methods=["PUT"])
+@admin_required
 def update_menu(item_id):
 
     data = request.get_json()
@@ -251,6 +272,7 @@ def update_menu(item_id):
 # ================================
 
 @app.route("/api/menu/<int:item_id>/availability", methods=["PATCH"])
+@admin_required
 def toggle_availability(item_id):
 
     data = request.get_json()
@@ -295,6 +317,7 @@ def toggle_availability(item_id):
 # ================================
 
 @app.route("/api/menu/<int:item_id>", methods=["DELETE"])
+@admin_required
 def delete_menu(item_id):
 
     print("DELETE REQUEST:", item_id)
@@ -329,6 +352,7 @@ def delete_menu(item_id):
 
 # GET ALL ORDERS
 @app.route("/api/orders", methods=["GET"])
+@admin_required
 def get_orders():
 
     connection = get_db()
@@ -345,6 +369,7 @@ def get_orders():
 
 # GET SINGLE ORDER
 @app.route("/api/orders/<int:order_id>", methods=["GET"])
+@admin_required
 def get_order(order_id):
 
     connection = get_db()
@@ -419,6 +444,7 @@ def create_order():
 
 # UPDATE ORDER STATUS
 @app.route("/api/orders/<int:order_id>/status", methods=["PATCH"])
+@admin_required
 def update_order_status(order_id):
 
     data = request.get_json()
@@ -481,6 +507,7 @@ def update_order_status(order_id):
 
 # DELETE ORDER
 @app.route("/api/orders/<int:order_id>", methods=["DELETE"])
+@admin_required
 def delete_order(order_id):
 
     connection = get_db()
@@ -512,6 +539,7 @@ def delete_order(order_id):
 # ========================================
 
 @app.route("/api/dashboard", methods=["GET"])
+@admin_required
 def dashboard_stats():
 
     connection = get_db()
@@ -593,6 +621,7 @@ def get_special_menus():
 
 
 @app.route("/api/special-menus", methods=["POST"])
+@admin_required
 def create_special_menu():
 
     title = request.form.get("title", "").strip()
@@ -650,6 +679,7 @@ def create_special_menu():
 
 
 @app.route("/api/special-menus/<int:menu_id>", methods=["PUT"])
+@admin_required
 def update_special_menu(menu_id):
 
     title = request.form.get("title", "").strip()
@@ -723,6 +753,7 @@ def update_special_menu(menu_id):
 
 
 @app.route("/api/special-menus/<int:menu_id>", methods=["DELETE"])
+@admin_required
 def delete_special_menu(menu_id):
 
     connection = get_db()
@@ -759,6 +790,7 @@ def delete_special_menu(menu_id):
 
 
 @app.route("/api/special-menus/<int:menu_id>/status", methods=["PATCH"])
+@admin_required
 def update_special_menu_status(menu_id):
 
     data = request.get_json()
@@ -788,6 +820,7 @@ def update_special_menu_status(menu_id):
 
 
 @app.route("/api/special-menus/image/<filename>")
+@admin_required
 def special_menu_image(filename):
 
     return send_from_directory(
@@ -800,6 +833,7 @@ def special_menu_image(filename):
 # =========================================
 
 @app.route("/api/settings", methods=["GET"])
+@admin_required
 def get_settings():
 
     connection = get_db()
@@ -824,6 +858,7 @@ def get_settings():
 
 
 @app.route("/api/settings/business", methods=["PUT"])
+@admin_required
 def update_business_settings():
 
     data = request.get_json()
@@ -871,6 +906,7 @@ def update_business_settings():
 
 
 @app.route("/api/settings/status", methods=["PUT"])
+@admin_required
 def update_business_status():
 
     data = request.get_json()
@@ -899,6 +935,7 @@ def update_business_status():
 
 
 @app.route("/api/settings/order-times", methods=["PUT"])
+@admin_required
 def update_order_times():
 
     data = request.get_json()
@@ -928,6 +965,7 @@ def update_order_times():
 
 
 @app.route("/api/settings/admin", methods=["PUT"])
+@admin_required
 def update_admin_account():
 
     data = request.get_json()
