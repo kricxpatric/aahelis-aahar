@@ -1078,6 +1078,8 @@ button {
 }
 
 
+
+
 /* ---------- CUSTOMER ORDER ---------- */
 
 .customer-order-section {
@@ -2670,7 +2672,7 @@ button {
 }
 
 #orderMessage.success {
-    animation: orderSuccessPop 100000s ease;
+    animation: orderSuccessPop 0.35s ease;
 }
 
 @keyframes orderSuccessPop {

@@ -8,7 +8,7 @@ from functools import wraps
 
 app = Flask(__name__)
 
-app.secret_key = "aahelis-aahar-local-secret-key"
+app.secret_key = "aahelis-aahar-local-secret-key" # secret key for session management
 
 CORS(app, supports_credentials=True)
 
