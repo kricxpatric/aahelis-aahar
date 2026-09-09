@@ -1,0 +1,25 @@
+import os
+from dotenv import load_dotenv
+from twilio.rest import Client
+
+load_dotenv()
+
+account_sid = os.getenv("TWILIO_ACCOUNT_SID")
+auth_token = os.getenv("TWILIO_AUTH_TOKEN")
+whatsapp_from = os.getenv("TWILIO_WHATSAPP_FROM")
+whatsapp_to = os.getenv("TWILIO_TEST_TO")
+
+if not account_sid or not auth_token:
+    print("❌ Twilio credentials are missing from .env")
+    exit()
+
+client = Client(account_sid, auth_token)
+
+message = client.messages.create(
+    from_=whatsapp_from,
+    to=whatsapp_to,
+    body="🔔 Test message from Aaheli's Aahar!\n\nWhatsApp notification system is connected successfully. ❤️"
+)
+
+print("✅ WhatsApp message sent!")
+print("Message SID:", message.sid)

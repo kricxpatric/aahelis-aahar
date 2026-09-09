@@ -828,6 +828,40 @@ def special_menu_image(filename):
         filename
     )
 
+
+# =========================================
+# PUBLIC SETTINGS API
+# =========================================
+
+@app.route("/api/public-settings", methods=["GET"])
+def get_public_settings():
+
+    connection = get_db()
+
+    settings = connection.execute("""
+        SELECT
+            business_name,
+            phone1,
+            phone2,
+            tagline,
+            pre_order,
+            delivery_info,
+            accepting_orders,
+            lunch_cutoff,
+            dinner_cutoff
+        FROM settings
+        WHERE id = 1
+    """).fetchone()
+
+    connection.close()
+
+    if not settings:
+        return jsonify({
+            "error": "Settings not found"
+        }), 404
+
+    return jsonify(dict(settings))
+
 # =========================================
 # SETTINGS API
 # =========================================

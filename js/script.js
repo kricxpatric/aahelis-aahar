@@ -80,15 +80,20 @@ document.addEventListener("DOMContentLoaded", function () {
        JEWELLERY COMING SOON
     ============================== */
 
-    const jewelleryBtn = document.getElementById("jewelleryBtn");
+    const jewelleryBtn =
+    document.getElementById("jewelleryBtn");
 
-    jewelleryBtn.addEventListener("click", function (event) {
+        if (jewelleryBtn) {
 
-        event.preventDefault();
+            jewelleryBtn.addEventListener("click", function (event) {
 
-        alert("Jewellery section coming soon! ✨");
+                 event.preventDefault();
 
-    });
+                 alert("Jewellery section coming soon! ✨");
+
+             });
+
+        }
 
 
     /* ==============================
@@ -106,6 +111,317 @@ document.addEventListener("DOMContentLoaded", function () {
 
 const MENU_API_URL =
     `http://${window.location.hostname}:5000/api/menu`;
+
+
+/* =========================================
+   PUBLIC BUSINESS SETTINGS
+========================================= */
+
+const PUBLIC_SETTINGS_API_URL =
+    `http://${window.location.hostname}:5000/api/public-settings`;
+
+let publicSettings = null;
+
+
+/* LOAD PUBLIC SETTINGS */
+
+async function loadPublicSettings() {
+
+    try {
+
+        const response =
+            await fetch(PUBLIC_SETTINGS_API_URL);
+
+        if (!response.ok) {
+            throw new Error("Could not load public settings.");
+        }
+
+        publicSettings = await response.json();
+
+        console.log("PUBLIC SETTINGS:", publicSettings);
+
+        applyPublicSettings();
+
+    } catch (error) {
+
+        console.error(
+            "PUBLIC SETTINGS ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+/* APPLY SETTINGS TO WEBSITE */
+
+function applyPublicSettings() {
+
+    if (!publicSettings) {
+        return;
+    }
+
+
+    /* =========================
+       BUSINESS NAME
+    ========================= */
+
+    document.querySelectorAll(".brand span").forEach(function(element) {
+        element.textContent = publicSettings.business_name;
+    });
+
+
+    document.querySelectorAll(".footer-brand h3").forEach(function(element) {
+        element.textContent = publicSettings.business_name;
+    });
+
+
+    document.title =
+        publicSettings.business_name +
+        " | ঘরোয়া খাবার";
+
+
+    /* =========================
+       TAGLINE
+    ========================= */
+
+    const taglineElement =
+        document.querySelector(".bengali-title");
+
+    if (taglineElement) {
+        taglineElement.textContent =
+            publicSettings.tagline;
+    }
+
+
+    /* =========================
+       PHONE NUMBERS
+    ========================= */
+
+    const phoneLinks =
+        document.querySelectorAll(
+            'a[href^="tel:"]'
+        );
+
+    phoneLinks.forEach(function(link, index) {
+
+        if (index === 0 && publicSettings.phone1) {
+
+            link.href =
+                "tel:+91" + publicSettings.phone1;
+
+            if (
+                link.textContent.includes("Call") ||
+                link.classList.contains("btn")
+            ) {
+                link.textContent =
+                    "Call to Order";
+            }
+
+        }
+
+    });
+
+
+    /* =========================
+       ABOUT CONTACT NUMBERS
+    ========================= */
+
+    const aboutCard =
+        document.querySelector(".about-card");
+
+    if (aboutCard) {
+
+        const aboutPhones =
+            aboutCard.querySelectorAll(
+                'a[href^="tel:"]'
+            );
+
+        if (aboutPhones[0] && publicSettings.phone1) {
+            aboutPhones[0].href =
+                "tel:+91" + publicSettings.phone1;
+
+            aboutPhones[0].textContent =
+                publicSettings.phone1;
+        }
+
+        if (aboutPhones[1] && publicSettings.phone2) {
+            aboutPhones[1].href =
+                "tel:+91" + publicSettings.phone2;
+
+            aboutPhones[1].textContent =
+                publicSettings.phone2;
+        }
+
+    }
+
+
+    /* =========================
+       FOOTER CONTACT NUMBERS
+    ========================= */
+
+    const footerContact =
+        document.querySelector(".footer-contact");
+
+    if (footerContact) {
+
+        const footerPhones =
+            footerContact.querySelectorAll(
+                'a[href^="tel:"]'
+            );
+
+        if (footerPhones[0] && publicSettings.phone1) {
+            footerPhones[0].href =
+                "tel:+91" + publicSettings.phone1;
+
+            footerPhones[0].textContent =
+                publicSettings.phone1;
+        }
+
+        if (footerPhones[1] && publicSettings.phone2) {
+            footerPhones[1].href =
+                "tel:+91" + publicSettings.phone2;
+
+            footerPhones[1].textContent =
+                publicSettings.phone2;
+        }
+
+    }
+
+
+    /* =========================
+       SPECIAL MENU SETTINGS
+    ========================= */
+
+    renderPublicSpecialMenus =
+        createSpecialMenuRenderer(publicSettings);
+
+    loadPublicSpecialMenus();
+
+}
+
+
+/* =========================================
+   SPECIAL MENU RENDERER WITH SETTINGS
+========================================= */
+
+function createSpecialMenuRenderer(settings) {
+
+    return function(menus) {
+
+        const list =
+            document.getElementById(
+                "publicSpecialMenusList"
+            );
+
+        if (!list) {
+            return;
+        }
+
+
+        const activeMenus =
+            menus.filter(function(menu) {
+
+                return menu.status === "Active";
+
+            });
+
+
+        if (!activeMenus.length) {
+
+            list.innerHTML = `
+                <div class="occasion-card">
+                    <div class="occasion-content">
+                        <h4 class="occasion-description">
+                            No special menus available right now.
+                        </h4>
+                    </div>
+                </div>
+            `;
+
+            return;
+        }
+
+
+        list.innerHTML =
+            activeMenus.map(function(menu) {
+
+                return `
+                    <article class="occasion-card">
+
+                        <div class="occasion-image">
+                            <img
+                                src="${menu.image_url}"
+                                alt="${escapePublicHTML(menu.title)}"
+                            >
+                        </div>
+
+                        <div class="occasion-content">
+
+                            <h4 class="occasion-description">
+                                ${escapePublicHTML(menu.title)}
+                            </h4>
+
+                            ${
+                                menu.description
+                                ? `
+                                    <p>
+                                        ${escapePublicHTML(
+                                            menu.description
+                                        )}
+                                    </p>
+                                `
+                                : ""
+                            }
+
+                            <div class="preorder-box">
+
+                                <strong>
+                                    ${escapePublicHTML(settings.pre_order)}
+                                </strong>
+
+                                <p>
+                                    ${escapePublicHTML(settings.delivery_info)}
+                                </p>
+
+                            </div>
+
+                            <div class="occasion-contact">
+
+                                <a
+                                    href="tel:+91${settings.phone1}"
+                                >
+                                    📞 ${escapePublicHTML(settings.phone1)}
+                                </a>
+
+                                <span>/</span>
+
+                                <a
+                                    href="tel:+91${settings.phone2}"
+                                >
+                                    ${escapePublicHTML(settings.phone2)}
+                                </a>
+
+                            </div>
+
+                            <a
+                                href="tel:+91${settings.phone1}"
+                                class="primary-button"
+                            >
+                                Order Now
+                            </a>
+
+                        </div>
+
+                    </article>
+                `;
+
+            }).join("");
+
+    };
+
+}
 
 
 /* =========================================
@@ -742,7 +1058,6 @@ function escapePublicHTML(value) {
    START
 ========================================= */
 
-loadPublicMenu();
 
 /* =========================================
    PUBLIC SPECIAL MENUS
@@ -795,133 +1110,12 @@ async function loadPublicSpecialMenus() {
 }
 
 
-function renderPublicSpecialMenus(menus) {
-
-    const list =
-        document.getElementById("publicSpecialMenusList");
-
-    if (!list) return;
-
-
-    /* Show only Active menus */
-
-    const activeMenus =
-        menus.filter(function(menu) {
-
-            return menu.status === "Active";
-
-        });
-
-
-    if (!activeMenus.length) {
-
-        list.innerHTML = `
-            <div class="occasion-card">
-
-                <div class="occasion-content">
-
-                    <h4 class="occasion-description">
-                        No special menus available right now.
-                    </h4>
-
-                </div>
-
-            </div>
-        `;
-
-        return;
-
-    }
-
-
-    list.innerHTML =
-        activeMenus.map(function(menu) {
-
-            return `
-                <article class="occasion-card">
-
-                    <div class="occasion-image">
-
-                        <img
-                            src="${menu.image_url}"
-                            alt="${escapePublicHTML(menu.title)}"
-                        >
-
-                    </div>
-
-
-                    <div class="occasion-content">
-
-                        <h4 class="occasion-description">
-
-                            ${escapePublicHTML(menu.title)}
-
-                        </h4>
-
-
-                        ${
-                            menu.description
-                            ? `
-                                <p>
-                                    ${escapePublicHTML(
-                                        menu.description
-                                    )}
-                                </p>
-                              `
-                            : ""
-                        }
-
-
-                        <div class="preorder-box">
-
-                            <strong>
-                                Pre-order 1–2 days before
-                            </strong>
-
-                            <p>
-                                Limited special-menu orders.
-                            </p>
-
-                        </div>
-
-
-                        <div class="occasion-contact">
-
-                            <a href="tel:+918902255928">
-                                📞 8902255928
-                            </a>
-
-                            <span>/</span>
-
-                            <a href="tel:+918284067220">
-                                8284067220
-                            </a>
-
-                        </div>
-
-
-                        <a
-                            href="tel:+918902255928"
-                            class="primary-button"
-                        >
-                            Order Now
-                        </a>
-
-                    </div>
-
-                </article>
-            `;
-
-        }).join("");
-
-}
-
 
 /* =========================================
    START SPECIAL MENUS
 ========================================= */
 
-loadPublicSpecialMenus();
+
 
 /* =========================================
    CUSTOMER ORDER SUBMISSION
@@ -1113,3 +1307,15 @@ function scrollToCart() {
         });
     }
 }
+
+/* =========================================
+   START PUBLIC WEBSITE
+========================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    loadPublicMenu();
+
+    loadPublicSettings();
+
+});
