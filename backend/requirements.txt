@@ -1,0 +1,6 @@
+Flask
+Flask-Cors
+Werkzeug
+twilio
+python-dotenv
+gunicorn

@@ -1034,9 +1034,7 @@ def update_special_menu_status(menu_id):
 
 
 @app.route("/api/special-menus/image/<filename>")
-@admin_required
 def special_menu_image(filename):
-
     return send_from_directory(
         app.config["UPLOAD_FOLDER"],
         filename
