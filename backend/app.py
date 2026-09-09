@@ -5,8 +5,84 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_cors import CORS
 import sqlite3
 from functools import wraps
+from dotenv import load_dotenv
+from twilio.rest import Client
+
+load_dotenv()
 
 app = Flask(__name__)
+
+# =========================================
+# WHATSAPP NOTIFICATIONS
+# =========================================
+
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+TWILIO_WHATSAPP_FROM = os.getenv("TWILIO_WHATSAPP_FROM")
+
+OWNER_WHATSAPP_NUMBERS = [
+    number.strip()
+    for number in os.getenv("OWNER_WHATSAPP_NUMBERS", "").split(",")
+    if number.strip()
+]
+
+
+def send_whatsapp_message(to_number, message_text):
+    try:
+        if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN:
+            print("⚠️ Twilio credentials are missing.")
+            return False
+
+        if not TWILIO_WHATSAPP_FROM:
+            print("⚠️ Twilio WhatsApp sender is missing.")
+            return False
+
+        client = Client(
+            TWILIO_ACCOUNT_SID,
+            TWILIO_AUTH_TOKEN
+        )
+
+        message = client.messages.create(
+            from_=TWILIO_WHATSAPP_FROM,
+            to=to_number,
+            body=message_text
+        )
+
+        print(
+            "✅ WhatsApp sent:",
+            to_number,
+            message.sid
+        )
+
+        return True
+
+    except Exception as error:
+        print(
+            "❌ WhatsApp notification failed:",
+            error
+        )
+
+        return False
+
+
+def send_new_order_notification(order_id, customer_name, phone, address, items, total):
+
+    message = (
+        f"🔔 *New Order #{order_id}*\n\n"
+        f"👤 Customer: {customer_name}\n"
+        f"📱 Phone: {phone}\n"
+        f"📍 Address: {address or 'Not provided'}\n\n"
+        f"🍽️ Items:\n{items}\n\n"
+        f"💰 Total: ₹{total}\n"
+        f"📌 Status: Pending\n\n"
+        f"Aaheli's Aahar"
+    )
+
+    for owner_number in OWNER_WHATSAPP_NUMBERS:
+        send_whatsapp_message(
+            owner_number,
+            message
+        )
 
 app.secret_key = "aahelis-aahar-local-secret-key" # secret key for session management
 
@@ -433,6 +509,16 @@ def create_order():
     order_id = cursor.lastrowid
 
     connection.close()
+
+    # Send WhatsApp notification to owner
+    send_new_order_notification(
+        order_id,
+        customer_name,
+        phone,
+        address,
+        items,
+        total
+    )
 
     print("ORDER CREATED:", order_id)
 
