@@ -84,7 +84,100 @@ def send_new_order_notification(order_id, customer_name, phone, address, items, 
             message
         )
 
-app.secret_key = "aahelis-aahar-local-secret-key" # secret key for session management
+def send_customer_order_confirmation(
+     order_id,
+     customer_name,
+     phone,
+    total
+ ):
+    # Make Indian phone numbers WhatsApp-ready
+    clean_phone = str(phone).strip().replace(" ", "").replace("-", "")
+
+    if clean_phone.startswith("0"):
+        clean_phone = "+91" + clean_phone[1:]
+    elif clean_phone.startswith("91") and not clean_phone.startswith("+"):
+        clean_phone = "+" + clean_phone
+    elif not clean_phone.startswith("+"):
+        clean_phone = "+91" + clean_phone
+
+    customer_whatsapp = f"whatsapp:{clean_phone}"
+
+    message = (
+        f"✅ *Order Received!*\n\n"
+        f"Hi {customer_name}! ❤️\n\n"
+        f"Your order *#{order_id}* has been received "
+        f"by Aaheli's Aahar.\n\n"
+        f"💰 Total: ₹{total}\n"
+        f"📌 Status: Pending\n\n"
+        f"We'll contact you shortly to confirm your order.\n\n"
+        f"Thank you for ordering from Aaheli's Aahar! 🍽️"
+    )
+
+    return send_whatsapp_message(
+        customer_whatsapp,
+        message
+    )
+
+def send_customer_status_notification(
+    order_id,
+    customer_name,
+    phone,
+    status
+):
+    # Make Indian phone numbers WhatsApp-ready
+    clean_phone = str(phone).strip().replace(" ", "").replace("-", "")
+
+    if clean_phone.startswith("0"):
+        clean_phone = "+91" + clean_phone[1:]
+    elif clean_phone.startswith("91") and not clean_phone.startswith("+"):
+        clean_phone = "+" + clean_phone
+    elif not clean_phone.startswith("+"):
+        clean_phone = "+91" + clean_phone
+
+    customer_whatsapp = f"whatsapp:{clean_phone}"
+
+    status_messages = {
+        "Confirmed":
+            "✅ Your order has been confirmed! We're getting everything ready for you. ❤️",
+
+        "Preparing":
+            "👨‍🍳 Your order is now being prepared with love! ❤️",
+
+        "Ready":
+            "🍽️ Your order is ready! We'll move to the next step shortly.",
+
+        "Out for Delivery":
+            "🛵 Your order is on the way! It will reach you soon. ❤️",
+
+        "Completed":
+            "🎉 Your order has been completed. Thank you for ordering from Aaheli's Aahar! ❤️",
+
+        "Cancelled":
+            "❌ We're sorry, but your order has been cancelled. Please contact us if you have any questions."
+    }
+
+    message_body = status_messages.get(status)
+
+    if not message_body:
+        return False
+
+    message = (
+        f"Hi {customer_name}! 👋\n\n"
+        f"Order #{order_id}\n\n"
+        f"{message_body}\n\n"
+        f"📌 Status: {status}\n\n"
+        f"Aaheli's Aahar"
+    )
+
+    return send_whatsapp_message(
+        customer_whatsapp,
+        message
+    )
+
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
+
+if not app.secret_key:
+    raise RuntimeError("FLASK_SECRET_KEY is missing from .env")
 
 CORS(app, supports_credentials=True)
 
@@ -511,6 +604,10 @@ def create_order():
     connection.close()
 
     # Send WhatsApp notification to owner
+    
+    print("ORDER CREATED:", order_id)
+
+    # 📱 Notify owner
     send_new_order_notification(
         order_id,
         customer_name,
@@ -520,7 +617,13 @@ def create_order():
         total
     )
 
-    print("ORDER CREATED:", order_id)
+    # 📲 Confirm order to customer
+    send_customer_order_confirmation(
+        order_id,
+        customer_name,
+        phone,
+        total
+    )
 
     return jsonify({
         "message": "Order created successfully",
@@ -559,6 +662,24 @@ def update_order_status(order_id):
 
     connection = get_db()
 
+    # Get customer details before updating
+    order = connection.execute("""
+        SELECT
+            id,
+            customer_name,
+            phone
+        FROM orders
+        WHERE id = ?
+    """, (order_id,)).fetchone()
+
+    if not order:
+        connection.close()
+
+        return jsonify({
+            "error": "Order not found"
+        }), 404
+
+    # Update order status
     cursor = connection.execute("""
         UPDATE orders
         SET status = ?
@@ -585,11 +706,18 @@ def update_order_status(order_id):
         status
     )
 
+    # Send WhatsApp notification to customer
+    send_customer_status_notification(
+        order_id,
+        order["customer_name"],
+        order["phone"],
+        status
+    )
+
     return jsonify({
         "message": "Order status updated",
         "status": status
     })
-
 
 # DELETE ORDER
 @app.route("/api/orders/<int:order_id>", methods=["DELETE"])
@@ -1243,5 +1371,5 @@ if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
         port=5000,
-        debug=True
+        debug=False
     )

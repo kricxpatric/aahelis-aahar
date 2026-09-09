@@ -109,8 +109,15 @@ document.addEventListener("DOMContentLoaded", function () {
    DATABASE MENU INTEGRATION
 ========================================= */
 
+const API_BASE_URL =
+    (window.location.hostname === "localhost" ||
+     window.location.hostname === "127.0.0.1" ||
+     /^192\.168\./.test(window.location.hostname))
+        ? `http://${window.location.hostname}:5000/api`
+        : `/api`;
+
 const MENU_API_URL =
-    `http://${window.location.hostname}:5000/api/menu`;
+    `${API_BASE_URL}/menu`;
 
 
 /* =========================================
@@ -118,7 +125,7 @@ const MENU_API_URL =
 ========================================= */
 
 const PUBLIC_SETTINGS_API_URL =
-    `http://${window.location.hostname}:5000/api/public-settings`;
+    `${API_BASE_URL}/public-settings`;
 
 let publicSettings = null;
 
@@ -1064,7 +1071,7 @@ function escapePublicHTML(value) {
 ========================================= */
 
 const PUBLIC_SPECIAL_MENUS_API_URL =
-    `http://${window.location.hostname}:5000/api/special-menus`;
+    `${API_BASE_URL}/special-menus`;
 
 
 async function loadPublicSpecialMenus() {
@@ -1122,7 +1129,7 @@ async function loadPublicSpecialMenus() {
 ========================================= */
 
 const CUSTOMER_ORDERS_API_URL =
-    `http://${window.location.hostname}:5000/api/orders`;
+    `${API_BASE_URL}/orders`;
 
 const customerOrderForm =
     document.getElementById("customerOrderForm");

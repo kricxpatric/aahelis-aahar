@@ -23,14 +23,22 @@ window.fetch = function (url, options = {}) {
 // Automatically use the laptop's IP address
 // when the website is opened through Live Server.
 
-const API_URL = `http://${window.location.hostname}:5000/api/menu`;
-
 // ========================================
 // ADMIN LOGIN
 // ========================================
 
+const API_BASE_URL =
+    (window.location.hostname === "localhost" ||
+     window.location.hostname === "127.0.0.1" ||
+     /^192\.168\./.test(window.location.hostname))
+        ? `http://${window.location.hostname}:5000/api`
+        : `/api`;
+
+const API_URL =
+    `${API_BASE_URL}/menu`;
+
 const AUTH_API_URL =
-    `http://${window.location.hostname}:5000/api`;
+    API_BASE_URL;
 
 // ========================================
 // AUTHENTICATED ADMIN FETCH
