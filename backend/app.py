@@ -1,3 +1,5 @@
+from multiprocessing.dummy import connection
+
 from flask import Flask, request, jsonify, send_from_directory, session
 import os
 from werkzeug.utils import secure_filename
@@ -367,30 +369,40 @@ def add_menu():
 
     connection = get_db()
 
-    cursor = connection.execute("""
-        INSERT INTO menu_items
-        (day, name, description, price, category, available)
-        VALUES (%s, %s, %s, %s, %s, 1)
-    """, (
-        day,
-        name,
-        description,
-        price,
-        category
-    ))
+    if DATABASE_URL:
+        cursor = connection.execute("""
+            INSERT INTO orders
+            (customer_name, phone, address, items, total, status)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            RETURNING id
+         """, (
+            customer_name,
+            phone,
+            address,
+            items,
+            total,
+            "Pending"
+        ))
 
-    connection.commit()
+        order_id = cursor.fetchone()["id"]
 
-    new_id = cursor.lastrowid
+    else:
+        cursor = connection.execute("""
+            INSERT INTO orders
+            (customer_name, phone, address, items, total, status)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (
+            customer_name,
+            phone,
+            address,
+            items,
+            total,
+            "Pending"
+        ))
 
-    connection.close()
+        order_id = cursor.lastrowid
 
-    print("ADDED ITEM ID:", new_id)
-
-    return jsonify({
-        "message": "Menu item added",
-        "id": new_id
-    }), 201
+connection.commit()
 
 
 # ================================
