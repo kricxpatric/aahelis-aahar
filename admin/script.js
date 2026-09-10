@@ -746,7 +746,7 @@ if (document.querySelector(".admin-food-list")) {
 // ========================================
 
 const ORDERS_API_URL =
-    `http://${window.location.hostname}:5000/api/orders`;
+    `${API_BASE_URL}/orders`;
 
 let allOrders = [];
 
@@ -771,7 +771,7 @@ async function loadOrders() {
 
     try {
 
-        const response = await fetch(ORDERS_API_URL);
+        const response = await adminfetch(ORDERS_API_URL);
 
         if (!response.ok) {
             throw new Error("Could not load orders.");
