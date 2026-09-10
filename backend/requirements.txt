@@ -4,3 +4,4 @@ Werkzeug
 twilio
 python-dotenv
 gunicorn
+psycopg[binary]
