@@ -1317,7 +1317,7 @@ if (document.getElementById("ordersList")) {
 // ========================================
 
 const DASHBOARD_API_URL =
-    `http://${window.location.hostname}:5000/api/dashboard`;
+    `${API_BASE_URL}/dashboard`;
 
 
 // ========================================
@@ -1335,7 +1335,7 @@ async function loadDashboard() {
 
     try {
 
-        const response = await fetch(DASHBOARD_API_URL);
+        const response = await adminfetch(DASHBOARD_API_URL);
 
         if (!response.ok) {
             throw new Error("Could not load dashboard.");
@@ -1481,7 +1481,7 @@ if (document.getElementById("totalOrders")) {
 }
 
 const SPECIAL_MENUS_API_URL =
-    `http://${window.location.hostname}:5000/api/special-menus`;
+    `${API_BASE_URL}/special-menus`;
 
 let specialMenus = [];
 
@@ -1504,7 +1504,7 @@ async function loadSpecialMenus() {
 
     try {
 
-        const response = await fetch(SPECIAL_MENUS_API_URL);
+        const response = await adminfetch(SPECIAL_MENUS_API_URL);
 
         if (!response.ok) {
             throw new Error("Could not load special menus.");
