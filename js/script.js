@@ -1273,6 +1273,9 @@ if (customerOrderForm) {
 
                 customerOrderForm.reset();
 
+                cart = [];
+                updateCart();
+
 
             } catch (error) {
 
