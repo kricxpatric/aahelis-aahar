@@ -38,7 +38,7 @@ const API_URL =
     `${API_BASE_URL}/menu`;
 
 const AUTH_API_URL =
-    API_BASE_URL;
+    `${API_BASE_URL}`;
 
 // ========================================
 // AUTHENTICATED ADMIN FETCH
@@ -771,7 +771,7 @@ async function loadOrders() {
 
     try {
 
-        const response = await adminfetch(ORDERS_API_URL);
+        const response = await adminFetch(ORDERS_API_URL);
 
         if (!response.ok) {
             throw new Error("Could not load orders.");
@@ -1335,7 +1335,7 @@ async function loadDashboard() {
 
     try {
 
-        const response = await adminfetch(DASHBOARD_API_URL);
+        const response = await adminFetch(DASHBOARD_API_URL);
 
         if (!response.ok) {
             throw new Error("Could not load dashboard.");
@@ -1504,7 +1504,7 @@ async function loadSpecialMenus() {
 
     try {
 
-        const response = await adminfetch(SPECIAL_MENUS_API_URL);
+        const response = await adminFetch(SPECIAL_MENUS_API_URL);
 
         if (!response.ok) {
             throw new Error("Could not load special menus.");
@@ -2012,8 +2012,7 @@ if (
 // =========================================
 
 const SETTINGS_API_URL =
-    `http://${window.location.hostname}:5000/api/settings`;
-
+    `${API_BASE_URL}/settings`;
 
 // =========================================
 // LOAD SETTINGS
@@ -2027,7 +2026,7 @@ async function loadSettings() {
 
     try {
 
-        const response = await fetch(SETTINGS_API_URL);
+        const response = await adminFetch(SETTINGS_API_URL);
 
         if (!response.ok) {
             throw new Error("Could not load settings.");
