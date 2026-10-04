@@ -2931,6 +2931,47 @@ button {
 
 }
 
+/* =========================================
+   STATIC SPECIAL MENUS
+========================================= */
+
+.static-special-menus {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.special-menu-static-card {
+    width: 100%;
+    background: #fffdf8;
+    border: 1px solid #e5d8c7;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(60, 45, 30, 0.08);
+}
+
+.special-menu-static-card img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+@media (max-width: 600px) {
+
+    .static-special-menus {
+        width: 100%;
+        gap: 18px;
+    }
+
+    .special-menu-static-card {
+        border-radius: 14px;
+    }
+
+}
+
 
 
 
