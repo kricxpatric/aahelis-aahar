@@ -1329,3 +1329,78 @@ document.addEventListener("DOMContentLoaded", function () {
     loadPublicSettings();
 
 });
+
+/* =================================
+   SPECIAL MENU IMAGE LIGHTBOX
+   ================================= */
+
+const specialMenuCards =
+    document.querySelectorAll(".special-menu-static-card");
+
+const specialMenuLightbox =
+    document.getElementById("specialMenuLightbox");
+
+const specialMenuLightboxImage =
+    document.getElementById("specialMenuLightboxImage");
+
+const specialMenuLightboxClose =
+    document.getElementById("specialMenuLightboxClose");
+
+
+specialMenuCards.forEach(function(card) {
+
+    const image = card.querySelector("img");
+
+    card.addEventListener("click", function() {
+
+        specialMenuLightboxImage.src = image.src;
+        specialMenuLightboxImage.alt = image.alt;
+
+        specialMenuLightbox.classList.add("active");
+
+        document.body.style.overflow = "hidden";
+
+    });
+
+});
+
+
+/* Close button */
+
+specialMenuLightboxClose.addEventListener("click", function() {
+
+    specialMenuLightbox.classList.remove("active");
+
+    document.body.style.overflow = "";
+
+});
+
+
+/* Click outside image to close */
+
+specialMenuLightbox.addEventListener("click", function(event) {
+
+    if (event.target === specialMenuLightbox) {
+
+        specialMenuLightbox.classList.remove("active");
+
+        document.body.style.overflow = "";
+
+    }
+
+});
+
+
+/* ESC key */
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+
+        specialMenuLightbox.classList.remove("active");
+
+        document.body.style.overflow = "";
+
+    }
+
+});

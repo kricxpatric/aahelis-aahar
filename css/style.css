@@ -2933,7 +2933,7 @@ button {
 
 /* =========================================
    STATIC SPECIAL MENUS
-========================================= */
+=========================================
 
 .static-special-menus {
     width: 100%;
@@ -2970,9 +2970,9 @@ button {
         border-radius: 14px;
     }
 
-}
+} */
 
-/* Special Menu Images */
+/* Special Menu Images 
 .special-menu img,
 .occasion-menu img {
     display: block;
@@ -2991,11 +2991,11 @@ button {
         margin: 20px auto;
         border-radius: 14px;
     }
-}
+} */
 
 /* ================================
    SPECIAL MENU IMAGE CARDS
-   ================================ */
+   ================================ 
 
 .static-special-menus {
     display: flex;
@@ -3017,8 +3017,119 @@ button {
     height: auto;
     border-radius: 18px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+} */
+
+/* =================================
+   SPECIAL MENU GALLERY
+   ================================= */
+
+.static-special-menus {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.special-menu-static-card {
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.special-menu-static-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+}
+
+.special-menu-static-card img {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: pointer;
 }
 
 
+/* =================================
+   FULL SCREEN IMAGE POPUP
+   ================================= */
+
+.special-menu-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    background: rgba(0, 0, 0, 0.88);
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 30px;
+}
+
+.special-menu-lightbox.active {
+    display: flex;
+}
+
+.special-menu-lightbox img {
+    max-width: 90%;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+
+    object-fit: contain;
+
+    border-radius: 12px;
+
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+
+/* Close button */
+
+.special-menu-lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+
+    font-size: 42px;
+    color: white;
+
+    cursor: pointer;
+
+    line-height: 1;
+}
+
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .static-special-menus {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        width: 94%;
+    }
+
+    .special-menu-lightbox {
+        padding: 15px;
+    }
+
+    .special-menu-lightbox img {
+        max-width: 96%;
+        max-height: 85vh;
+    }
+
+    .special-menu-lightbox-close {
+        top: 12px;
+        right: 18px;
+        font-size: 36px;
+    }
+}
 
 
